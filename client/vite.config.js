@@ -8,9 +8,12 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:5000', // Your Flask app's URL
+        target:'http://127.0.0.1:5200', // Your Flask app's URL
         changeOrigin: true,
       },
     },
+    watch: {
+      usePolling: true
+    }
   },
 })

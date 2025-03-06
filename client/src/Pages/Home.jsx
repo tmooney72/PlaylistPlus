@@ -1,12 +1,9 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button } from '@chakra-ui/react'
+import HomePage from '@/components/components/Home/HomePage';
 
 const Home = () => {
-  return (
-    <div>
-        <a href='http://localhost:5000/api'><Button></Button></a>
-    </div>
-  )
+  return (<HomePage />);
 }
 
 export default Home
