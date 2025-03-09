@@ -6,6 +6,8 @@ import Auth from './Pages/Auth';
 import Navbar from './components/components/Navbar/Navbar';
 import ProtectedRoute from './components/checkLoggedIn';
 import LoginLogoutPage from './components/components/Login/Login';
+import Artists from './Pages/Artists';
+
 
 function App() {
   return (
@@ -14,8 +16,11 @@ function App() {
       <Routes>
         {/* Protected routes */}
         <Route element={<ProtectedRoute />}>
+
           <Route path="/Playlists" element={<Playlists />} />
+          <Route path='/Artists' element={<Artists />} />
         </Route>
+
         {/* Public route */}
         <Route path="/Home" element={<Home />} />
         <Route path="/Login" element={<LoginLogoutPage />} />

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 import { app } from "../Firebase/firebase"; // Import the initialized Firebase app
 
 const useSignInWithUser = () => {
@@ -14,7 +15,8 @@ const useSignInWithUser = () => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       console.log("User successfully logged in:", userCredential.user);
       setLoading(false);
-      localStorage.setItem("user", JSON.stringify(userCredential.user)); // Store the user data in local storage
+      localStorage.setItem("user", JSON.stringify(userCredential.user));
+      localStorage.setItem("userTimeStamp", JSON.stringify(Date.now())) // Store the user data in local storage
       return userCredential.user; // Return the registered user object
     } catch (error) {
       console.error("Error during login:", error.code, error.message);

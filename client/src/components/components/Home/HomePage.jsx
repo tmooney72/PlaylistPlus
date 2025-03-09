@@ -8,11 +8,13 @@ import {
   SimpleGrid 
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
+import AddArtistToNotifications from '@/hooks/useAddArtistToNotifications';
 
 const HomePage = () => {
   const [playlists, setPlaylists] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
+
 
   // Replace this mock data with your actual API calls
   useEffect(() => {
@@ -35,7 +37,8 @@ const HomePage = () => {
   }, [])
 
   return (
-    <Box p={4} minH="100vh" bg="gray.50">
+    <Box p={4} minH="100vh" bg="black">
+      <Button onClick={AddArtistToNotifications}>Click me</Button>
       {/* Hero Section */}
       <VStack spacing={8} textAlign="center" mb={12}>
         <Heading as="h1" size="2xl">
@@ -67,7 +70,7 @@ const HomePage = () => {
                   <Box
                     key={playlist.id}
                     p={4}
-                    bg="white"
+                    bg="green"
                     shadow="sm"
                     borderRadius="md"
                   >
@@ -94,7 +97,7 @@ const HomePage = () => {
                   <Box
                     key={notification.id}
                     p={4}
-                    bg="white"
+                    bg="green"
                     shadow="sm"
                     borderRadius="md"
                   >

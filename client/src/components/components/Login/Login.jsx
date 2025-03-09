@@ -33,16 +33,16 @@ const LoginLogoutPage = () => {
   };
 
   // Check authentication status from the backend
-  useEffect(() => {
-    fetch("/api/authed")
-      .then(res => res.json())
-      .then(data => {
-        console.log(data);
-        data.Authed
-          ? setIsAuthed(true)
-          : window.location.href = "http://127.0.0.1:5200/api";
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch("/api/authed")
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       console.log(data);
+  //       data.Authed
+  //         ? setIsAuthed(true)
+  //         : window.location.href = "http://127.0.0.1:5200/api";
+  //     });
+  // }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -91,7 +91,7 @@ const LoginLogoutPage = () => {
           name="email"
           size="lg"
           variant="filled"
-          bg="white"
+          bg="gray"
         />
         <Input
           type="password"
@@ -101,7 +101,7 @@ const LoginLogoutPage = () => {
           name="password"
           size="lg"
           variant="filled"
-          bg="white"
+          bg="gray"
         />
         <Button
           type="submit"
