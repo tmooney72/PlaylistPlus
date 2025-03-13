@@ -7,11 +7,13 @@ def ArtistNotifications():
         auth_url = sp_oauth.get_authorize_url()
         return redirect(auth_url)
     data = request.get_json()
+    print(data)
     print(data['data'])
     stuff = []
     for artist in data['data']:
         songs = sp.artist_albums(artist_id=artist, album_type='single', limit=5)
         albums = sp.artist_albums(artist_id=artist, album_type='album', limit=5)
+        print(artist)
         print(songs)
         stuff.append(songs)
-    return {"Results": 'blah'}
+    return {"Results": stuff}
