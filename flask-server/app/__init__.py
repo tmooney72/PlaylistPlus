@@ -9,6 +9,8 @@ app = Flask(__name__)
 app.config['SCHEDULER_API_ENABLED'] = True  # Fixed syntax using square brackets
 app.config['SECRET_KEY'] = os.urandom(64)
 
+
+
 # Enable CORS
 CORS(app)
 
@@ -46,3 +48,6 @@ from app import logout
 from app import playlists
 from app import artist_notifications
 from app import search_artist
+
+
+
