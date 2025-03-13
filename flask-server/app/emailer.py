@@ -1,7 +1,12 @@
 import smtplib
 from email.message import EmailMessage
+import os
+from dotenv import load_dotenv
 
 def send_email(recipient_email):
+    load_dotenv()
+    sender_email = os.getenv("sender_email")
+    sender_password = os.getenv("sender_password")
     """
     Sends an email using SMTP_SSL.
 
@@ -17,8 +22,6 @@ def send_email(recipient_email):
     Returns:
     - A tuple (success, message) where success is a boolean and message is a status string.
     """
-    sender_email = 'playlistplus91@gmail.com'
-    sender_password='zxwc vbfj call soxp'
     port=465
     smtp_server='smtp.gmail.com'
     subject = "Test Email from python"
