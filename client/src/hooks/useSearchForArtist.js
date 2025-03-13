@@ -1,12 +1,12 @@
 import React from 'react'
 import { useState } from 'react'
 
-const useSearchForArtist = (query) => {
+const useSearchForArtist = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState(null);
 
-    const SearchForArtist = async() => {
+    const SearchForArtist = async (query) => {
   setSearching(true);
   try {
   const response = await fetch("/api/SearchArtist", {

@@ -12,6 +12,7 @@ import {
 import useRegisterWithUser from '@/hooks/useRegisterWithUser';
 import useSignInWithUser from '@/hooks/useLoginWithUsername';
 import HomePage from '../Home/HomePage';
+import useAuthStore from '@/store/authStore';
 
 const LoginLogoutPage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -24,6 +25,7 @@ const LoginLogoutPage = () => {
   });
   const { register, loading, error } = useRegisterWithUser();
   const { loginUser, loadingUser, errorUser } = useSignInWithUser();
+  const { user, log, logout, setUser } = useAuthStore();
 
   const handleChange = (e) => {
     setFormData(prevState => ({
@@ -32,27 +34,17 @@ const LoginLogoutPage = () => {
     }));
   };
 
-  // Check authentication status from the backend
-  // useEffect(() => {
-  //   fetch("/api/authed")
-  //     .then(res => res.json())
-  //     .then(data => {
-  //       console.log(data);
-  //       data.Authed
-  //         ? setIsAuthed(true)
-  //         : window.location.href = "http://127.0.0.1:5200/api";
-  //     });
-  // }, []);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       if (isRegister) {
         const user = await register(formData.email, formData.password);
         console.log(user);
+        log(user)
         setIsLoggedIn(true);
       } else {
         const user = await loginUser(formData.email, formData.password);
+        log(user)
         console.log(user);
         setIsLoggedIn(true);
       }
