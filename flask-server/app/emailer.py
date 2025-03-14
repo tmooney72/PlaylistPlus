@@ -3,7 +3,7 @@ from email.message import EmailMessage
 import os
 from dotenv import load_dotenv
 
-def send_email(recipient_email):
+def send_email(recipient_email, artist_name, song_name):
     load_dotenv()
     sender_email = os.getenv("sender_email")
     sender_password = os.getenv("sender_password")
@@ -24,13 +24,13 @@ def send_email(recipient_email):
     """
     port=465
     smtp_server='smtp.gmail.com'
-    subject = "Test Email from python"
+    subject = ("New Song Alert")
     recipient_email = recipient_email
     msg = EmailMessage()
     msg['Subject'] = subject
     msg['From'] = 'playlistplus91@gmail.com'
     msg['To'] = recipient_email
-    body = "This is a test email"
+    body = (f"New song by {artist_name} has been released! The song is called {song_name}.")
     msg.set_content(body)
     
     # Optionally, you can add an HTML version:

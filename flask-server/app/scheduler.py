@@ -59,7 +59,7 @@ def my_job():
                     notiDoc = notiDoc.to_dict()
                     if 'notified' not in notiDoc or song['name'] not in notiDoc['notified']:
                         print('5')
-                        send_email(notiDoc['email'])
+                        send_email(notiDoc['email'], docinfo['name'], song['name'])
                         noti_ref.update({'notified': firestore.ArrayUnion([song['name']])})
                         print(notiDoc)
                         print("Email sent")
