@@ -1,50 +1,60 @@
 import React, { useEffect, useState } from 'react';
-import { 
-  Button, 
-  Text, 
-  HStack, 
-  Center, 
-  Image, 
-  VStack, 
-  SimpleGrid, 
-  Grid,
-  Box,
-  Spinner,
-  Flex,
-  Input,
-  Icon
-} from '@chakra-ui/react';
-import { keyframes as emotionKeyframes } from '@emotion/react';
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  ModalCloseButton
-} from '@chakra-ui/modal';
+  Box,
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Paper,
+  Stack,
+  Grid,
+  Typography,
+  Divider,
+} from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { FaPlay } from 'react-icons/fa';
 import useGetPlaylists from '../hooks/useGetPlaylists';
-import useModal from '../hooks/useModal'; // Use the custom hook
 
+// Styled component for the playlist card
+const PlaylistCard = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(2),
+  backgroundColor: 'rgba(255,255,255,0.1)',
+  borderRadius: theme.spacing(2),
+  border: '1px solid transparent',
+  backdropFilter: 'blur(8px)',
+  transition: 'transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease',
+  cursor: 'pointer',
+  position: 'relative',
+  '&:hover': {
+    zIndex: 2,
+    transform: 'translateY(-5px) scale(1.03)',
+    boxShadow: theme.shadows[4],
+    borderColor: theme.palette.grey[500],
+  },
+}));
 
 const Playlists = () => {
-  const [data, setData] = useState([{}]);
+  const [data, setData] = useState([]);
   const [playlist, setPlaylist] = useState("");
   const [songs, setSongs] = useState([]);
   const [isPlaylist, setIsPlaylist] = useState(true);
   const [selectedPlaylist, setSelectedPlaylist] = useState(null);
   const { getPlaylists, error, loading } = useGetPlaylists();
-  const { isOpen, onOpen, onClose } = useModal();
+  
+  // State for controlling the Dialog (modal)
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getPlaylists();
-      if (data) {
-        setData(data);
+      const result = await getPlaylists();
+      if (result) {
+        setData(result.Playlists);
       }
-      console.log(data)
+      console.log(result);
     };
     fetchData();
   }, []);
@@ -54,282 +64,186 @@ const Playlists = () => {
       const response = await fetch('/api/CleanPlaylist', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ data: playlistName })
+        body: JSON.stringify({ data: playlistName }),
       });
-      
-      const data = await response.json();
-      setPlaylist(data.Playlist[0]);
-      setSongs(data.Playlist[1]);
+      const result = await response.json();
+      setPlaylist(result.Playlist[0]);
+      setSongs(result.Playlist[1]);
       setIsPlaylist(false);
-      onClose(); // close modal after cleaning
-    } catch (error) {
-      console.error('Error:', error);
+      handleClose(); // Close the dialog after cleaning
+    } catch (err) {
+      console.error('Error:', err);
     }
   }
 
   const handlePlaylistClick = (playlistItem) => {
     console.log("Playlist clicked:", playlistItem);
     setSelectedPlaylist(playlistItem);
-    onOpen();
+    handleOpen();
   };
 
-  const handleBackToPlaylists = () => {
-    setIsPlaylist(true);
-  };
-
-  const fadeIn = emotionKeyframes`
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-`;
-
-const playlistScreen = (
-  <Box 
-    minH="100vh" 
-    bgGradient="linear(to-br, #1A1A1A, #0D0D0D)" 
-    py={10} 
-    px={6}
-  >
-    <Center mb={10}>
-  <Text
-    fontSize="6xl"
-    fontWeight="extrabold"
-    color="white"
-    textShadow="0 0 10px rgba(0, 0, 0, 0.9), 0 0 20px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 0, 0, 0.7)"
-  >
-    Your Music Collections
-  </Text>
-</Center>
-
-    <SimpleGrid columns={[1, 2, 3, 4]} spacing={8}>
-      {(data?.Playlists || []).map((playlist, i) => (
-        <Box
-          key={i}
-          p={4}
-          bg="rgba(255,255,255,0.1)"
-          borderRadius="2xl"
-          border="1px solid"
-          borderColor="transparent"
-          backdropFilter="blur(8px)"
-          transition="transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease"
-          _hover={{
-            zIndex: 2, // Bring the hovered card to the front
-            transform: "translateY(-5px) scale(1.03)",
-            boxShadow: "2xl",
-            borderColor: "black.400"
-          }}
-          cursor="pointer"
-          position="relative"
-          onClick={() => handlePlaylistClick(playlist)}
-          animation={`${fadeIn} 0.5s ease-out`}
-        >
-          <Box 
-            position="relative" 
-            overflow="hidden" 
-            borderRadius="2xl"
-          >
-            <Image
-              src={playlist['image']}
-              alt={`${playlist['name']} cover`}
-              w="100%"
-              h="220px"
-              objectFit="cover"
-              transition="transform 0.3s ease"
-              _hover={{ transform: "scale(1.1)" }}
-            />
-            <Icon
-              as={FaPlay}
-              position="absolute"
-              bottom="4"
-              right="4"
-              boxSize="10"
-              color="whiteAlpha.900"
-              opacity={0}
-              transition="opacity 0.3s ease"
-              _hover={{ opacity: 1 }}
-            />
-          </Box>
-          <Text
-            mt={4}
-            fontWeight="bold"
-            fontSize="2xl"
-            textAlign="center"
-            color="white"
-          >
-            {playlist['name']}
-          </Text>
+  // Main page displaying playlists in a vertical stack (each as its own row)
+  const playlistScreen = (
+    <Box sx={{ minHeight: '100vh', bgcolor: '#1A1A1A', py: 10, px: 6 }}>
+      <Box sx={{ textAlign: 'center', mb: 4 }}>
+        <Typography variant="h2" sx={{ fontWeight: 'bold', color: 'white' }}>
+          Your Music Collections
+        </Typography>
+      </Box>
+      {loading ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+          <CircularProgress color="inherit" />
         </Box>
-      ))}
-    </SimpleGrid>
-  </Box>
-);
-  
-  
+      ) : (
+        <Stack spacing={4}>
+          {(data || []).map((playlistItem, i) => (
+            <PlaylistCard key={i} onClick={() => handlePlaylistClick(playlistItem)}>
+              <Stack direction="row" spacing={2} alignItems="center">
+                <Box
+                  component="img"
+                  src={playlistItem.image}
+                  alt={`${playlistItem.name} cover`}
+                  sx={{
+                    width: 120,
+                    height: 120,
+                    objectFit: 'cover',
+                    borderRadius: 2,
+                    transition: 'transform 0.3s ease',
+                    '&:hover': { transform: 'scale(1.1)' },
+                  }}
+                />
+                <Box sx={{ flexGrow: 1 }}>
+                  <Typography variant="h5" sx={{ color: 'white' }}>
+                    {playlistItem.name}
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: 'grey.300' }}>
+                    {playlistItem.description}
+                  </Typography>
+                </Box>
+                <Box sx={{ position: 'relative' }}>
+                  <FaPlay size={32} style={{ color: 'white', opacity: 0.6 }} />
+                </Box>
+              </Stack>
+            </PlaylistCard>
+          ))}
+        </Stack>
+      )}
+    </Box>
+  );
 
-  const songScreen = (
-    <>
-      <HStack spacing={4} mb={6} px={4}>
-        <Button onClick={handleBackToPlaylists} colorScheme="purple" size="sm">
-          Back to Playlists
+  // Dialog showing selected playlist details and options
+  const songScreenDialog = (
+    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
+      <DialogTitle sx={{ textAlign: 'center', color: 'black' }}>
+        {selectedPlaylist ? selectedPlaylist.name : 'Playlist Options'}
+      </DialogTitle>
+      <DialogContent dividers>
+        <Stack spacing={2}>
+          <Grid container spacing={2}>
+            {/* Left Section: Song List */}
+            <Grid item xs={12} md={6}>
+              <Box
+                sx={{
+                  bgcolor: '#F5F5F5',
+                  p: 2,
+                  borderRadius: 2,
+                  maxHeight: '400px',
+                  overflowY: 'auto',
+                }}
+              >
+                {selectedPlaylist &&
+                  selectedPlaylist.songs &&
+                  selectedPlaylist.songs.map((song, i) => (
+                    <Box
+                      key={i}
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        mb: 1,
+                        borderBottom: '1px solid #E0E0E0',
+                        pb: 1,
+                      }}
+                    >
+                      {song.image && (
+                        <Box
+                          component="img"
+                          src={song.image}
+                          alt={song.name}
+                          sx={{ width: 50, height: 50, borderRadius: 1, mr: 1 }}
+                        />
+                      )}
+                      <Typography variant="body1" sx={{ fontWeight: 500, color: 'black' }}>
+                        {song.name}
+                      </Typography>
+                    </Box>
+                  ))}
+              </Box>
+            </Grid>
+            {/* Right Section: Playlist Options */}
+            <Grid item xs={12} md={6}>
+              <Stack spacing={2}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  onClick={() =>
+                    handleCleanPlaylist(selectedPlaylist ? selectedPlaylist.name : '')
+                  }
+                >
+                  Clean Playlist
+                </Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  size="large"
+                  onClick={() => {
+                    alert("Custom Cover Images feature coming soon!");
+                    handleClose();
+                  }}
+                >
+                  Custom Cover Image
+                </Button>
+                <Button
+                  variant="contained"
+                  color="warning"
+                  size="large"
+                  onClick={() => {
+                    alert("Reorder Songs feature coming soon!");
+                    handleClose();
+                  }}
+                >
+                  Reorder Songs
+                </Button>
+                <Button
+                  variant="contained"
+                  color="error"
+                  size="large"
+                  onClick={() => {
+                    alert("Share Playlist feature coming soon!");
+                    handleClose();
+                  }}
+                >
+                  Share Playlist
+                </Button>
+              </Stack>
+            </Grid>
+          </Grid>
+        </Stack>
+      </DialogContent>
+      <DialogActions sx={{ justifyContent: 'center' }}>
+        <Button onClick={handleClose} variant="outlined" color="inherit">
+          Cancel
         </Button>
-        <Text fontSize="2xl" fontWeight="bold" color="purple.500">
-          {playlist}
-        </Text>
-      </HStack>
-      
-      <VStack 
-        spacing={2} 
-        align="stretch" 
-        bg="white" 
-        borderRadius="md" 
-        boxShadow="sm"
-        p={4}
-        mx={4}
-      >
-        <HStack bg="purple.500" p={2} borderRadius="md" color="white">
-          <Text fontWeight="bold" w="10%">#</Text>
-          <Text fontWeight="bold" w="80%">Song</Text>
-          <Text fontWeight="bold" w="10%" textAlign="right">❤</Text>
-        </HStack>
-        
-        {Array.isArray(songs) ? (
-          songs.map((song, index) => (
-            <HStack 
-              key={index}
-              p={2}
-              _hover={{ bg: "gray.50" }}
-              borderBottomWidth={1}
-              borderBottomColor="gray.100"
-            >
-              <Text color="gray.500" w="10%">{index + 1}</Text>
-              <Text w="80%">{song}</Text>
-              <Text w="10%" textAlign="right" color="gray.400">♪</Text>
-            </HStack>
-          ))
-        ) : (
-          <Center p={4}>
-            <Text color="gray.500">No songs available</Text>
-          </Center>
-        )}
-      </VStack>
-    </>
+      </DialogActions>
+    </Dialog>
   );
 
   return (
     <>
-      <Center mb={6}>
-        <Text fontSize="2xl" fontWeight="bold">
-          Playlists
-        </Text>
-      </Center>
-      {isPlaylist ? playlistScreen : songScreen}
-
-      {/* Test button to directly open modal */}
-
-
-      {/* Modal for Playlist Options */}
-      <Modal isOpen={isOpen} onClose={onClose} isCentered motionPreset="scale">
-  <ModalOverlay bg="rgba(0, 0, 0, 0.8)" backdropFilter="blur(10px)" />
-  <ModalContent 
-    bg="white" 
-    borderRadius="2xl" 
-    maxW="800px" 
-    p={8} 
-    boxShadow="xl"
-    mx="auto"
-    my="auto"
-  >
-    <ModalCloseButton color="black" />
-    <ModalHeader textAlign="center" fontSize="2xl" mb={4} color="black">
-      {selectedPlaylist ? selectedPlaylist['name'] : 'Playlist Options'}
-    </ModalHeader>
-    <ModalBody>
-      <Grid templateColumns={["1fr", "1fr 1fr"]} gap={6}>
-        {/* Left Section: Song List */}
-        <Box 
-          bg="gray.50" 
-          p={4} 
-          borderRadius="lg" 
-          boxShadow="inner" 
-          maxH="400px" 
-          overflowY="auto"
-        >
-          {selectedPlaylist && selectedPlaylist['songs'] && selectedPlaylist['songs'].map((song, i) => (
-            <HStack 
-              key={i} 
-              spacing={3} 
-              mb={3} 
-              borderBottom="1px" 
-              borderColor="gray.200" 
-              pb={2}
-            >
-              {song['image'] && (
-                <Image 
-                  src={song['image']} 
-                  alt={song['name']} 
-                  boxSize="50px" 
-                  borderRadius="md" 
-                  objectFit="cover"
-                />
-              )}
-              <Text fontWeight="medium" color="black">
-                {song['name']}
-              </Text>
-            </HStack>
-          ))}
-        </Box>
-        
-        {/* Right Section: Playlist Options */}
-        <VStack spacing={6} align="stretch">
-          <Button 
-            colorScheme="teal" 
-            size="lg" 
-            onClick={() => handleCleanPlaylist(selectedPlaylist ? selectedPlaylist['name'] : '')}
-          >
-            Clean Playlist
-          </Button>
-          <Button 
-            colorScheme="blue" 
-            size="lg" 
-            onClick={() => {
-              alert("Custom Cover Images feature coming soon!");
-              onClose();
-            }}
-          >
-            Custom Cover Image
-          </Button>
-          <Button 
-            colorScheme="purple" 
-            size="lg" 
-            onClick={() => {
-              alert("Reorder Songs feature coming soon!");
-              onClose();
-            }}
-          >
-            Reorder Songs
-          </Button>
-          <Button 
-            colorScheme="orange" 
-            size="lg" 
-            onClick={() => {
-              alert("Share Playlist feature coming soon!");
-              onClose();
-            }}
-          >
-            Share Playlist
-          </Button>
-        </VStack>
-      </Grid>
-    </ModalBody>
-    <ModalFooter justifyContent="center">
-      <Button onClick={onClose} variant="outline" colorScheme="gray">
-        <Text color='black'>Cancel</Text>
-      </Button>
-    </ModalFooter>
-  </ModalContent>
-</Modal>
-
+      {playlistScreen}
+      {songScreenDialog}
     </>
   );
 };

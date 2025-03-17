@@ -1,119 +1,112 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Box, 
-  Button, 
-  Heading, 
-  Text, 
-  VStack, 
-  SimpleGrid 
-} from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
-import AddArtistToNotifications from '@/hooks/useAddArtistToNotifications';
+import React from 'react';
+import { Box, Button, Typography, Grid, Stack, Container } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
+import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
+import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
+
+const features = [
+  {
+    icon: <PlaylistPlayIcon fontSize="large" color="primary" />,
+    title: "Create Custom Playlists",
+    description: "Effortlessly build, edit, and share playlists tailored to your taste."
+  },
+  {
+    icon: <NotificationsActiveIcon fontSize="large" color="primary" />,
+    title: "Stay Informed",
+    description: "Receive real-time notifications when your favorite artists drop new tracks."
+  },
+  {
+    icon: <LibraryMusicIcon fontSize="large" color="primary" />,
+    title: "Discover New Music",
+    description: "Explore curated selections and discover fresh sounds from emerging talents."
+  },
+];
 
 const HomePage = () => {
-  const [playlists, setPlaylists] = useState([]);
-  const [notifications, setNotifications] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-
-  // Replace this mock data with your actual API calls
-  useEffect(() => {
-    setTimeout(() => {
-      setPlaylists([
-        { id: 1, name: "Chill Vibes", description: "Relax with these smooth tracks" },
-        { id: 2, name: "Workout Boost", description: "High energy beats to keep you moving" }
-      ]);
-
-      setNotifications([
-        { id: 1, artist: "Artist A", song: "Fresh Drop", time: "2 hours ago" },
-        { id: 2, artist: "Artist B", song: "New Single", time: "1 day ago" }
-      ]);
-
-      setLoading(false);
-    }, 1000);
-  }, []);
-  useEffect(() => {
-    console.log("BOB");
-  }, [])
-
   return (
-    <Box p={4} minH="100vh" bg="black">
-      <Button onClick={AddArtistToNotifications}>Click me</Button>
+    <Box sx={{ bgcolor: '#121212', minHeight: '100vh', color: 'white' }}>
       {/* Hero Section */}
-      <VStack spacing={8} textAlign="center" mb={12}>
-        <Heading as="h1" size="2xl">
-          Your Music Hub
-        </Heading>
-        <Text fontSize="lg">
-          Create clean, personalized playlists and get notified when your favorite artists drop new tracks.
-        </Text>
-        <Button colorScheme="teal" size="lg" as={Link} to="/create-playlist">
-          Create Playlist
+      <Box
+        sx={{
+          backgroundImage: 'url(/assets/hero-bg.jpg)', // Replace with your image path
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          height: { xs: '70vh', md: '80vh' },
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          textAlign: 'center',
+          px: 2,
+        }}
+      >
+        <Typography variant="h2" sx={{ fontWeight: 'bold', mb: 2 }}>
+          Welcome to PlaylistPlus
+        </Typography>
+        <Typography variant="h5" sx={{ mb: 4, px: 2 }}>
+          Your ultimate music hub to create personalized playlists, stay informed, and discover new music.
+        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          component={RouterLink}
+          to="/playlists"
+          sx={{ fontSize: '1rem', px: 4, py: 1.5 }}
+        >
+          Explore Now
         </Button>
-      </VStack>
+      </Box>
 
-      {/* Main Content */}
-      {loading ? (
-        <Text textAlign="center">Loading...</Text>
-      ) : (
-        <SimpleGrid columns={[1, null, 2]} spacing={10}>
-          {/* Playlists Section */}
-          <Box>
-            <Heading as="h2" size="lg" mb={4}>
-              Your Playlists
-            </Heading>
-            {playlists.length === 0 ? (
-              <Text>No playlists found. Create one now!</Text>
-            ) : (
-              <VStack spacing={4} align="stretch">
-                {playlists.map((playlist) => (
-                  <Box
-                    key={playlist.id}
-                    p={4}
-                    bg="green"
-                    shadow="sm"
-                    borderRadius="md"
-                  >
-                    <Heading as="h3" size="md">
-                      {playlist.name}
-                    </Heading>
-                    <Text mt={2}>{playlist.description}</Text>
-                  </Box>
-                ))}
-              </VStack>
-            )}
-          </Box>
+      {/* Features Section */}
+      <Container sx={{ py: 6 }}>
+        <Typography variant="h4" sx={{ textAlign: 'center', mb: 4 }}>
+          What We Do
+        </Typography>
+        <Grid container spacing={4}>
+          {features.map((feature, index) => (
+            <Grid item xs={12} md={4} key={index}>
+              <Box
+                sx={{
+                  p: 3,
+                  textAlign: 'center',
+                  border: '1px solid #333',
+                  borderRadius: 2,
+                  transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                  '&:hover': {
+                    transform: 'scale(1.03)',
+                    boxShadow: 4,
+                  },
+                }}
+              >
+                <Box sx={{ mb: 2 }}>{feature.icon}</Box>
+                <Typography variant="h6" sx={{ mb: 1 }}>
+                  {feature.title}
+                </Typography>
+                <Typography variant="body1" sx={{ color: 'grey.400' }}>
+                  {feature.description}
+                </Typography>
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
 
-          {/* Notifications Section */}
-          <Box>
-            <Heading as="h2" size="lg" mb={4}>
-              Notifications
-            </Heading>
-            {notifications.length === 0 ? (
-              <Text>No notifications yet.</Text>
-            ) : (
-              <VStack spacing={4} align="stretch">
-                {notifications.map((notification) => (
-                  <Box
-                    key={notification.id}
-                    p={4}
-                    bg="green"
-                    shadow="sm"
-                    borderRadius="md"
-                  >
-                    <Text fontWeight="bold">{notification.artist}</Text>
-                    <Text>
-                      {notification.song} — <Text as="span" color="gray.500">{notification.time}</Text>
-                    </Text>
-                  </Box>
-                ))}
-              </VStack>
-            )}
-          </Box>
-        </SimpleGrid>
-      )}
+      {/* Footer */}
+      <Box
+        sx={{
+          py: 3,
+          borderTop: '1px solid #333',
+          textAlign: 'center',
+        }}
+      >
+        <Typography variant="body2" sx={{ color: 'grey.500' }}>
+          © {new Date().getFullYear()} PlaylistPlus. All rights reserved.
+        </Typography>
+      </Box>
     </Box>
   );
 };
 
 export default HomePage;
+

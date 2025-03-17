@@ -50,4 +50,3 @@ from app import artist_notifications
 from app import search_artist
 
 
-

@@ -1,35 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Box,
-  Button,
-  AbsoluteCenter,
-  Heading,
-  Image,
-  Input,
-  Stack,
-  Text
-} from '@chakra-ui/react';
+import { Box, Button, Paper, Stack, TextField, Typography } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 import useRegisterWithUser from '@/hooks/useRegisterWithUser';
 import useSignInWithUser from '@/hooks/useLoginWithUsername';
-import HomePage from '../Home/HomePage';
 import useAuthStore from '@/store/authStore';
 
 const LoginLogoutPage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const [isRegister, setIsRegister] = useState(false);
-  const [isAuthed, setIsAuthed] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
   const { register, loading, error } = useRegisterWithUser();
-  const { loginUser, loadingUser, errorUser } = useSignInWithUser();
-  const { user, log, logout, setUser } = useAuthStore();
+  const { loginUser, loadingUser } = useSignInWithUser();
+  const { user, log } = useAuthStore();
 
   const handleChange = (e) => {
-    setFormData(prevState => ({
-      ...prevState,
+    setFormData((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value
     }));
   };
@@ -37,69 +27,67 @@ const LoginLogoutPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      let result;
       if (isRegister) {
-        const user = await register(formData.email, formData.password);
-        console.log(user);
-        log(user)
-        setIsLoggedIn(true);
+        result = await register(formData.email, formData.password);
       } else {
-        const user = await loginUser(formData.email, formData.password);
-        log(user)
-        console.log(user);
-        setIsLoggedIn(true);
+        result = await loginUser(formData.email, formData.password);
       }
+      log(result);
+      setIsLoggedIn(true);
       window.location.href = "http://127.0.0.1:5200/api";
-    } catch (error) {
-      console.error("Error during registration:", error);
+    } catch (err) {
+      console.error("Error during registration/login:", err);
     }
   };
 
-  const login = () => {
+  const loginHandler = () => {
     setIsLogin(true);
     setIsRegister(false);
   };
 
-  // Check local storage for an existing user
   useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (user) {
+    const localUser = localStorage.getItem("user");
+    if (localUser) {
       setIsLoggedIn(true);
     }
   }, []);
 
-  const registerPage = () => {
+  const registerPageHandler = () => {
     setIsRegister(true);
     setIsLogin(false);
   };
 
+  // Login form component
   const loginComp = (
-    <Box as="form" onSubmit={handleSubmit}>
-      <Stack spacing={4}>
-        <Input
+    <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
+      <Stack spacing={2}>
+        <TextField
           type="email"
-          placeholder="Email"
+          name="email"
+          label="Email"
           value={formData.email}
           onChange={handleChange}
-          name="email"
-          size="lg"
           variant="filled"
-          bg="gray"
+          fullWidth
+          sx={{ backgroundColor: 'white' }}
         />
-        <Input
+        <TextField
           type="password"
-          placeholder="Password"
+          name="password"
+          label="Password"
           value={formData.password}
           onChange={handleChange}
-          name="password"
-          size="lg"
           variant="filled"
-          bg="gray"
+          fullWidth
+          sx={{ backgroundColor: 'white' }}
         />
-        <Button
-          type="submit"
-          isLoading={loading || loadingUser}
-          colorScheme="teal"
-          size="lg"
+        <Button 
+          type="submit" 
+          variant="contained" 
+          color="primary" 
+          size="large" 
+          disabled={loading || loadingUser}
         >
           {loading || loadingUser ? 'Processing...' : 'Login'}
         </Button>
@@ -107,63 +95,89 @@ const LoginLogoutPage = () => {
     </Box>
   );
 
+  // Register form component
   const registerComp = (
-    <Box as="form" onSubmit={handleSubmit}>
-      <Stack spacing={4}>
-        <Input
+    <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
+      <Stack spacing={2}>
+        <TextField
           type="email"
-          placeholder="Email"
+          name="email"
+          label="Email"
           value={formData.email}
           onChange={handleChange}
-          name="email"
-          size="lg"
           variant="filled"
-          bg="white"
+          fullWidth
+          sx={{ backgroundColor: 'white' }}
         />
-        <Input
+        <TextField
           type="password"
-          placeholder="Password"
+          name="password"
+          label="Password"
           value={formData.password}
           onChange={handleChange}
-          name="password"
-          size="lg"
           variant="filled"
-          bg="white"
+          fullWidth
+          sx={{ backgroundColor: 'white' }}
         />
-        <Button
-          type="submit"
-          isLoading={loading}
-          colorScheme="teal"
-          size="lg"
+        <Button 
+          type="submit" 
+          variant="contained" 
+          color="primary" 
+          size="large" 
+          disabled={loading}
         >
           {loading ? 'Registering...' : 'Register'}
         </Button>
       </Stack>
-      {error && <Text color="red.500" mt={2}>{error}</Text>}
+      {error && (
+        <Typography variant="body2" color="error" sx={{ mt: 1 }}>
+          {error}
+        </Typography>
+      )}
     </Box>
   );
 
   return (
-    <AbsoluteCenter>
-      <Stack spacing={8} align="center">
-        <Image
-          src='../../logo.jpg'
-          boxSize="200px"
-          borderRadius="full"
-          objectFit="cover"
+    <Box
+      sx={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: { xs: '90%', sm: '400px' },
+        p: 2,
+      }}
+    >
+      <Stack spacing={4} alignItems="center">
+        <Box
+          component="img"
+          src="../../logo.jpg"
           alt="Logo"
-          mb={4}
+          sx={{
+            width: 200,
+            height: 200,
+            borderRadius: '50%',
+            objectFit: 'cover',
+            mb: 2,
+          }}
         />
-        <Box maxW="sm" borderWidth="1px" bg="gray.100" p={6} rounded="md" boxShadow="md">
-          <Stack spacing={4}>
-            <Heading as="h1" size="lg" textAlign="center">
-              Please <Button variant="link" onClick={login}>login</Button> or <Button variant="link" onClick={registerPage}>register</Button>
-            </Heading>
+        <Paper elevation={3} sx={{ p: 4, width: '100%' }}>
+          <Stack spacing={2}>
+            <Typography variant="h5" align="center">
+              Please{' '}
+              <Button onClick={loginHandler} variant="text" size="small">
+                login
+              </Button>{' '}
+              or{' '}
+              <Button onClick={registerPageHandler} variant="text" size="small">
+                register
+              </Button>
+            </Typography>
             {isLogin ? loginComp : registerComp}
           </Stack>
-        </Box>
+        </Paper>
       </Stack>
-    </AbsoluteCenter>
+    </Box>
   );
 };
 

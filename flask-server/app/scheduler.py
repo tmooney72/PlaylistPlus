@@ -75,7 +75,7 @@ def init_scheduler(app):
     #send_email()
     scheduler.init_app(app)
     scheduler.start()
-    scheduler.add_job(id='Scheduled Task', func=my_job, trigger='interval', seconds=5)
+    scheduler.add_job(id='Scheduled Task', func=my_job, trigger='interval', seconds=5, max_instances=2)
 
 
 

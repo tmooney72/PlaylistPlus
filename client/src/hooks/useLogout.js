@@ -5,7 +5,7 @@ const useLogout = async () => {
  const auth = await getAuth();
  console.log('bob');
 signOut(auth).then(() => {
-    console.log(localStorage.getItem('user'));
+    localStorage.clear();
 }).catch((error) => {
   // An error happened.
 });
