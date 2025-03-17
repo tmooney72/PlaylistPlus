@@ -1,2 +1,2 @@
 .env
-firebaseinfo.json
+./firebase/firebaseinfo.json
