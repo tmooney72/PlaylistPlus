@@ -1,0 +1,6 @@
+{
+    "build": {
+      "directory": "flask-server",
+      "builder": "python"
+    }
+  }
