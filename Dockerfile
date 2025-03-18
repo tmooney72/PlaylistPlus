@@ -1,20 +1,19 @@
-# Use an official lightweight Python image
 FROM python:3.9-slim
 
-# Set the working directory
 WORKDIR /app
 
-# Copy only the requirements file first (to take advantage of Docker layer caching)
+# Copy requirements and install dependencies
 COPY flask-server/requirements.txt ./
-
-# Upgrade pip and install dependencies
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Copy the rest of your Flask app code from the flask-server directory
+# Copy your Flask app code
 COPY flask-server/ .
 
-# Expose the port that Railway sets in the $PORT environment variable
+# Set a default port if $PORT is not defined at runtime
+ENV PORT=5000
+
+# Expose the port
 EXPOSE $PORT
 
-# Use Gunicorn to serve your Flask app. Adjust "app:app" if your module or app name differs. change
+# Run the app using Gunicorn
 CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:$PORT", "app:app"]
