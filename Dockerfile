@@ -16,5 +16,5 @@ COPY flask-server/ .
 # Expose the port that Railway sets in the $PORT environment variable
 EXPOSE $PORT
 
-# Use Gunicorn to serve your Flask app. Adjust "app:app" if your module or app name differs.
+# Use Gunicorn to serve your Flask app. Adjust "app:app" if your module or app name differs. change
 CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:$PORT", "app:app"]
