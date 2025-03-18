@@ -1,2 +1,3 @@
 flask-server/app/.env
+flask-server/.cache
 **/__pycache__/
