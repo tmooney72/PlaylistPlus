@@ -6,21 +6,13 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 # Create Flask app and set configuration
 app = Flask(__name__)
-app.config['SCHEDULER_API_ENABLED'] = True
-app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY', os.urandom(64))
-app.config['SESSION_COOKIE_SECURE'] = True
-app.config['SESSION_COOKIE_HTTPONLY'] = True
-app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+app.config['SCHEDULER_API_ENABLED'] = True  # Fixed syntax using square brackets
+app.config['SECRET_KEY'] = os.urandom(64)
 
-# Enable CORS with credentials
-CORS(app, supports_credentials=True, resources={
-    r"/api/*": {
-        "origins": ["http://localhost:5173"],
-        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"],
-        "supports_credentials": True
-    }
-})
+
+
+# Enable CORS
+CORS(app)
 
 # Spotify configuration (shared across modules)
 client_id = 'e38944e89ce74ba691862c01183972ed'
@@ -41,9 +33,7 @@ sp_oauth = SpotifyOAuth(
     scope=scope,
     cache_handler=cache_handler,
     show_dialog=True)
-
-# Initialize Spotify client with None - it will be created when needed
-sp = None
+sp = Spotify(auth_manager=sp_oauth)
 
 # Import the scheduler initialization function and initialize it
 from app.scheduler import init_scheduler
