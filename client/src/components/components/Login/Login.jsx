@@ -120,7 +120,7 @@ const LoginLogoutPage = () => {
       }
       log(result);
       setIsLoggedIn(true);
-      window.location.href = "http://127.0.0.1:5200/api";
+      window.location.href = "https://desirable-emotion-production.up.railway.app/api";
     } catch (err) {
       console.error("Error during registration/login:", err);
     }

@@ -8,7 +8,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target:'http://127.0.0.1:5200', // Your Flask app's URL
+        target:'https://desirable-emotion-production.up.railway.app', // Your Flask app's URL
         changeOrigin: true,
       },
     },
