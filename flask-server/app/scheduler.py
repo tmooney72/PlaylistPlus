@@ -93,6 +93,6 @@ def init_scheduler(app):
     scheduler.start()
     # Check every 6 hours, only allow one instance
     scheduler.add_job(id='Check New Releases', func=my_job, trigger='interval', 
-                     seconds = 1, max_instances=1, misfire_grace_time=None)
+                     minutes = 10, max_instances=1, misfire_grace_time=None)
     print("Scheduler started - will check for new releases every 6 hours")
     
