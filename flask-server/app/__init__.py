@@ -8,6 +8,7 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 app = Flask(__name__)
 app.config['SCHEDULER_API_ENABLED'] = True  # Fixed syntax using square brackets
 app.config['SECRET_KEY'] = os.urandom(64)
+print('this is running')
 
 
 
