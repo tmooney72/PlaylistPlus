@@ -1,12 +1,12 @@
 from app import app, cache_handler, sp_oauth, sp
-from flask import redirect, jsonify
+from flask import redirect
 
 @app.route('/api/Playlists')
 def Playlists():
     # Validate the token
     if not sp_oauth.validate_token(cache_handler.get_cached_token()):
         auth_url = sp_oauth.get_authorize_url()
-        return jsonify({"redirect": auth_url}), 401
+        return redirect(auth_url) #changed
     
     # Fetch the current user's playlists
     playlists = sp.current_user_playlists()
