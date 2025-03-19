@@ -17,7 +17,7 @@ CORS(app)
 # Spotify configuration (shared across modules)
 client_id = 'e38944e89ce74ba691862c01183972ed'
 client_secret = '64176f6f86694b958ecab491209cbfd6'
-redirect_uri = 'http://localhost:5200/api/callback'
+redirect_uri = 'https://desirable-emotion-production.up.railway.app/api/callback'
 scope = 'playlist-read-private, playlist-modify-private, playlist-modify-public, playlist-modify-public' 
 
 from spotipy.oauth2 import SpotifyOAuth
