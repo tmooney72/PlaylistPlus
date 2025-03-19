@@ -7,7 +7,7 @@ import Navbar from './components/components/Navbar/Navbar';
 import ProtectedRoute from './components/checkLoggedIn';
 import LoginLogoutPage from './components/components/Login/Login';
 import Artists from './Pages/Artists';
-
+import Notifications from './Pages/Notifications';
 
 function App() {
   return (
@@ -19,6 +19,7 @@ function App() {
 
           <Route path="/Playlists" element={<Playlists />} />
           <Route path='/Artists' element={<Artists />} />
+          <Route path='/Notifications' element={<Notifications />} />
         </Route>
 
         {/* Public route */}

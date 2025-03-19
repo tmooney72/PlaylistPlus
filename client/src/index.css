@@ -9,3 +9,27 @@
 body {
     background-color: lightgray;
 }
+
+/* Global autofill style overrides */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px rgba(255, 255, 255, 0.08) inset !important;
+  -webkit-text-fill-color: white !important;
+  transition: background-color 5000s ease-in-out 0s;
+  caret-color: white;
+}
+
+/* Firefox */
+input:-moz-autofill,
+input:-moz-autofill:focus {
+  -moz-text-fill-color: white !important;
+  box-shadow: 0 0 0 30px rgba(255, 255, 255, 0.08) inset !important;
+}
+
+/* Edge */
+input:-ms-autofill {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  color: white !important;
+}

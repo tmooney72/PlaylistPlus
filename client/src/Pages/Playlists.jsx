@@ -12,26 +12,83 @@ import {
   Grid,
   Typography,
   Divider,
+  Container,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { FaPlay } from 'react-icons/fa';
+import { FaPlay, FaMusic } from 'react-icons/fa';
 import useGetPlaylists from '../hooks/useGetPlaylists';
 
 // Styled component for the playlist card
 const PlaylistCard = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(2),
-  backgroundColor: 'rgba(255,255,255,0.1)',
+  padding: theme.spacing(3),
+  background: 'rgba(255, 255, 255, 0.05)',
   borderRadius: theme.spacing(2),
-  border: '1px solid transparent',
-  backdropFilter: 'blur(8px)',
-  transition: 'transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease',
+  border: '1px solid rgba(255, 255, 255, 0.1)',
+  backdropFilter: 'blur(10px)',
+  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
   cursor: 'pointer',
   position: 'relative',
+  overflow: 'hidden',
   '&:hover': {
-    zIndex: 2,
-    transform: 'translateY(-5px) scale(1.03)',
-    boxShadow: theme.shadows[4],
-    borderColor: theme.palette.grey[500],
+    transform: 'translateY(-8px)',
+    boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
+    background: 'rgba(255, 255, 255, 0.08)',
+    '& .play-icon': {
+      opacity: 1,
+      transform: 'translateY(0) scale(1)',
+    },
+    '& img': {
+      transform: 'scale(1.05)',
+    },
+  },
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: '100%',
+    background: 'linear-gradient(45deg, rgba(255,107,107,0.1), rgba(78,205,196,0.1))',
+    opacity: 0,
+    transition: 'opacity 0.3s ease',
+  },
+  '&:hover::before': {
+    opacity: 1,
+  },
+}));
+
+// Styled component for the modal
+const StyledDialog = styled(Dialog)(({ theme }) => ({
+  '& .MuiDialog-paper': {
+    background: '#1A1A1A',
+    borderRadius: theme.spacing(3),
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    backdropFilter: 'blur(10px)',
+  },
+  '& .MuiDialogTitle-root': {
+    background: 'linear-gradient(45deg, #FF6B6B, #4ECDC4)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    padding: theme.spacing(3),
+  },
+  '& .MuiDialogContent-root': {
+    padding: theme.spacing(4),
+  },
+}));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+  borderRadius: '30px',
+  padding: '12px 24px',
+  background: 'linear-gradient(45deg, #FF6B6B, #4ECDC4)',
+  color: 'white',
+  fontWeight: '600',
+  textTransform: 'none',
+  transition: 'all 0.3s ease',
+  '&:hover': {
+    transform: 'translateY(-2px)',
+    boxShadow: '0 6px 20px rgba(0,0,0,0.3)',
   },
 }));
 
@@ -84,160 +141,267 @@ const Playlists = () => {
     handleOpen();
   };
 
-  // Main page displaying playlists in a vertical stack (each as its own row)
+  // Main page displaying playlists in a vertical stack
   const playlistScreen = (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#1A1A1A', py: 10, px: 6 }}>
-      <Box sx={{ textAlign: 'center', mb: 4 }}>
-        <Typography variant="h2" sx={{ fontWeight: 'bold', color: 'white' }}>
-          Your Music Collections
-        </Typography>
-      </Box>
-      {loading ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-          <CircularProgress color="inherit" />
+    <Box sx={{ 
+      minHeight: '100vh', 
+      bgcolor: '#121212',
+      backgroundImage: 'linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.6) 100%)',
+      py: 10, 
+      px: { xs: 2, md: 6 } 
+    }}>
+      <Container maxWidth="lg">
+        <Box sx={{ textAlign: 'center', mb: 8 }}>
+          <Typography 
+            variant="h2" 
+            sx={{ 
+              fontWeight: 'bold',
+              background: 'linear-gradient(45deg, #FF6B6B, #4ECDC4)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              mb: 2,
+            }}
+          >
+            Your Music Collections
+          </Typography>
+          <Typography 
+            variant="h6" 
+            sx={{ 
+              color: 'rgba(255,255,255,0.7)',
+              maxWidth: '600px',
+              mx: 'auto',
+            }}
+          >
+            Discover and manage your personalized playlists
+          </Typography>
         </Box>
-      ) : (
-        <Stack spacing={4}>
-          {(data || []).map((playlistItem, i) => (
-            <PlaylistCard key={i} onClick={() => handlePlaylistClick(playlistItem)}>
-              <Stack direction="row" spacing={2} alignItems="center">
-                <Box
-                  component="img"
-                  src={playlistItem.image}
-                  alt={`${playlistItem.name} cover`}
-                  sx={{
-                    width: 120,
-                    height: 120,
-                    objectFit: 'cover',
-                    borderRadius: 2,
-                    transition: 'transform 0.3s ease',
-                    '&:hover': { transform: 'scale(1.1)' },
-                  }}
-                />
-                <Box sx={{ flexGrow: 1 }}>
-                  <Typography variant="h5" sx={{ color: 'white' }}>
-                    {playlistItem.name}
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: 'grey.300' }}>
-                    {playlistItem.description}
-                  </Typography>
-                </Box>
-                <Box sx={{ position: 'relative' }}>
-                  <FaPlay size={32} style={{ color: 'white', opacity: 0.6 }} />
-                </Box>
-              </Stack>
-            </PlaylistCard>
-          ))}
-        </Stack>
-      )}
+
+        {loading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+            <CircularProgress sx={{ color: '#4ECDC4' }} />
+          </Box>
+        ) : data?.length === 0 ? (
+          <Box 
+            sx={{ 
+              textAlign: 'center',
+              py: 8,
+              background: 'rgba(255,255,255,0.05)',
+              borderRadius: 4,
+              backdropFilter: 'blur(10px)',
+            }}
+          >
+            <FaMusic size={48} style={{ color: '#4ECDC4', marginBottom: '16px' }} />
+            <Typography variant="h5" sx={{ color: 'white', mb: 2 }}>
+              No playlists yet
+            </Typography>
+            <Typography variant="body1" sx={{ color: 'rgba(255,255,255,0.7)', mb: 3 }}>
+              Start creating your music collections
+            </Typography>
+            <StyledButton>
+              Create Playlist
+            </StyledButton>
+          </Box>
+        ) : (
+          <Stack spacing={4}>
+            {(data || []).map((playlistItem, i) => (
+              <PlaylistCard key={i} onClick={() => handlePlaylistClick(playlistItem)}>
+                <Stack direction="row" spacing={3} alignItems="center">
+                  <Box
+                    component="img"
+                    src={playlistItem.image}
+                    alt={`${playlistItem.name} cover`}
+                    sx={{
+                      width: 140,
+                      height: 140,
+                      objectFit: 'cover',
+                      borderRadius: 2,
+                      transition: 'transform 0.3s ease',
+                      boxShadow: '0 8px 16px rgba(0,0,0,0.2)',
+                    }}
+                  />
+                  <Box sx={{ flexGrow: 1 }}>
+                    <Typography 
+                      variant="h5" 
+                      sx={{ 
+                        color: 'white',
+                        fontWeight: '600',
+                        mb: 1,
+                      }}
+                    >
+                      {playlistItem.name}
+                    </Typography>
+                    <Typography 
+                      variant="body1" 
+                      sx={{ 
+                        color: 'rgba(255,255,255,0.7)',
+                        mb: 2,
+                      }}
+                    >
+                      {playlistItem.description}
+                    </Typography>
+                    <Typography 
+                      variant="body2" 
+                      sx={{ 
+                        color: 'rgba(255,255,255,0.5)',
+                      }}
+                    >
+                      {playlistItem.songs?.length || 0} songs
+                    </Typography>
+                  </Box>
+                  <Box 
+                    className="play-icon"
+                    sx={{ 
+                      opacity: 0.6,
+                      transform: 'translateY(10px) scale(0.9)',
+                      transition: 'all 0.3s ease',
+                    }}
+                  >
+                    <FaPlay size={32} style={{ color: '#4ECDC4' }} />
+                  </Box>
+                </Stack>
+              </PlaylistCard>
+            ))}
+          </Stack>
+        )}
+      </Container>
     </Box>
   );
 
   // Dialog showing selected playlist details and options
   const songScreenDialog = (
-    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
-      <DialogTitle sx={{ textAlign: 'center', color: 'black' }}>
+    <StyledDialog open={open} onClose={handleClose} fullWidth maxWidth="md">
+      <DialogTitle>
         {selectedPlaylist ? selectedPlaylist.name : 'Playlist Options'}
       </DialogTitle>
       <DialogContent dividers>
-        <Stack spacing={2}>
-          <Grid container spacing={2}>
+        <Stack spacing={4}>
+          <Grid container spacing={4}>
             {/* Left Section: Song List */}
             <Grid item xs={12} md={6}>
               <Box
                 sx={{
-                  bgcolor: '#F5F5F5',
-                  p: 2,
-                  borderRadius: 2,
-                  maxHeight: '400px',
+                  background: 'rgba(255,255,255,0.05)',
+                  borderRadius: 3,
+                  p: 3,
+                  maxHeight: '500px',
                   overflowY: 'auto',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  backdropFilter: 'blur(10px)',
                 }}
               >
-                {selectedPlaylist &&
-                  selectedPlaylist.songs &&
-                  selectedPlaylist.songs.map((song, i) => (
-                    <Box
-                      key={i}
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        mb: 1,
-                        borderBottom: '1px solid #E0E0E0',
-                        pb: 1,
-                      }}
-                    >
-                      {song.image && (
-                        <Box
-                          component="img"
-                          src={song.image}
-                          alt={song.name}
-                          sx={{ width: 50, height: 50, borderRadius: 1, mr: 1 }}
-                        />
-                      )}
-                      <Typography variant="body1" sx={{ fontWeight: 500, color: 'black' }}>
-                        {song.name}
-                      </Typography>
-                    </Box>
-                  ))}
+                <Typography 
+                  variant="h6" 
+                  sx={{ 
+                    color: 'white',
+                    mb: 3,
+                    fontWeight: '600',
+                  }}
+                >
+                  Songs
+                </Typography>
+                {selectedPlaylist?.songs?.map((song, i) => (
+                  <Box
+                    key={i}
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      mb: 2,
+                      p: 2,
+                      borderRadius: 2,
+                      background: 'rgba(255,255,255,0.03)',
+                      transition: 'all 0.2s ease',
+                      '&:hover': {
+                        background: 'rgba(255,255,255,0.08)',
+                        transform: 'translateX(4px)',
+                      },
+                    }}
+                  >
+                    {song.image && (
+                      <Box
+                        component="img"
+                        src={song.image}
+                        alt={song.name}
+                        sx={{ 
+                          width: 50, 
+                          height: 50, 
+                          borderRadius: 1,
+                          mr: 2,
+                          boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+                        }}
+                      />
+                    )}
+                    <Typography variant="body1" sx={{ color: 'white' }}>
+                      {song.name}
+                    </Typography>
+                  </Box>
+                ))}
               </Box>
             </Grid>
             {/* Right Section: Playlist Options */}
             <Grid item xs={12} md={6}>
-              <Stack spacing={2}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  onClick={() =>
-                    handleCleanPlaylist(selectedPlaylist ? selectedPlaylist.name : '')
-                  }
+              <Stack spacing={3}>
+                <StyledButton
+                  onClick={() => handleCleanPlaylist(selectedPlaylist?.name)}
+                  startIcon={<FaMusic />}
                 >
                   Clean Playlist
-                </Button>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  size="large"
+                </StyledButton>
+                <StyledButton
                   onClick={() => {
                     alert("Custom Cover Images feature coming soon!");
                     handleClose();
                   }}
+                  sx={{
+                    background: 'linear-gradient(45deg, #4ECDC4, #2ECC71)',
+                  }}
                 >
                   Custom Cover Image
-                </Button>
-                <Button
-                  variant="contained"
-                  color="warning"
-                  size="large"
+                </StyledButton>
+                <StyledButton
                   onClick={() => {
                     alert("Reorder Songs feature coming soon!");
                     handleClose();
                   }}
+                  sx={{
+                    background: 'linear-gradient(45deg, #FF6B6B, #FF8E53)',
+                  }}
                 >
                   Reorder Songs
-                </Button>
-                <Button
-                  variant="contained"
-                  color="error"
-                  size="large"
+                </StyledButton>
+                <StyledButton
                   onClick={() => {
                     alert("Share Playlist feature coming soon!");
                     handleClose();
                   }}
+                  sx={{
+                    background: 'linear-gradient(45deg, #4A90E2, #967ADC)',
+                  }}
                 >
                   Share Playlist
-                </Button>
+                </StyledButton>
               </Stack>
             </Grid>
           </Grid>
         </Stack>
       </DialogContent>
-      <DialogActions sx={{ justifyContent: 'center' }}>
-        <Button onClick={handleClose} variant="outlined" color="inherit">
-          Cancel
+      <DialogActions sx={{ p: 3, justifyContent: 'center' }}>
+        <Button 
+          onClick={handleClose}
+          sx={{ 
+            color: 'white',
+            borderRadius: '20px',
+            px: 4,
+            border: '1px solid rgba(255,255,255,0.2)',
+            '&:hover': {
+              border: '1px solid rgba(255,255,255,0.4)',
+              background: 'rgba(255,255,255,0.05)',
+            },
+          }}
+        >
+          Close
         </Button>
       </DialogActions>
-    </Dialog>
+    </StyledDialog>
   );
 
   return (
