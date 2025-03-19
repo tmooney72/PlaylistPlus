@@ -35,6 +35,7 @@ const useGetPlaylists = () => {
       }
 
       const data = await response.json();
+      console.log(data);
       setPlaylists(data);
       localStorage.setItem("Playlists", JSON.stringify(data));
       localStorage.setItem("Playlists_Timestamp", Date.now().toString()); // Save timestamp
