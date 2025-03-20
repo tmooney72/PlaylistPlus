@@ -1,13 +1,20 @@
 from app import app, cache_handler, sp_oauth, sp
-from flask import redirect
+from flask import redirect, session
 
 @app.route('/api/Playlists')
 def Playlists():
+    # Check both session and cache handler
+    session_token = session.get('token_info')
+    cache_token = cache_handler.get_cached_token()
+    
+    # Use session token if available, otherwise use cache token
+    token_info = session_token if session_token else cache_token
+    
     # Validate the token
-    if not sp_oauth.validate_token(cache_handler.get_cached_token()):
+    if not token_info or not sp_oauth.validate_token(token_info):
         print('token not valid')
         auth_url = sp_oauth.get_authorize_url()
-        return redirect(auth_url) #changed
+        return redirect(auth_url)
     else:
         print('token valid')
     
