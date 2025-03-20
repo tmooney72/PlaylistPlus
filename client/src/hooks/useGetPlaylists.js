@@ -8,6 +8,12 @@ const useGetPlaylists = () => {
   const getPlaylists = async () => {
     const storedData = localStorage.getItem("Playlists");
     const storedTimestamp = localStorage.getItem("Playlists_Timestamp");
+    const response = await fetch("https://desirable-emotion-production.up.railway.app/api/Playlists", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    console.log(response, 'response')
 
     if (storedData && storedTimestamp) {
       const now = Date.now();

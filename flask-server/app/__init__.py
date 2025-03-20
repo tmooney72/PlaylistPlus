@@ -1,5 +1,5 @@
 import os
-from flask import Flask, session
+from flask import Flask, session, make_response
 from flask_cors import CORS
 import warnings
 import redis
@@ -33,6 +33,16 @@ CORS(app,
          "allow_headers": ["Content-Type", "Authorization", "Cookie"],
          "expose_headers": ["Set-Cookie"]
      }})
+
+# Add a decorator to handle preflight requests
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:5173')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,Cookie')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    response.headers.add('Access-Control-Expose-Headers', 'Set-Cookie')
+    return response
 
 # Spotify configuration (shared across modules)
 client_id = 'e38944e89ce74ba691862c01183972ed'
