@@ -2,6 +2,8 @@ import os
 from flask import Flask, session
 from flask_cors import CORS
 import warnings
+import redis
+from datetime import timedelta
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 # Create Flask app and set configuration
@@ -12,8 +14,6 @@ app.config['SESSION_TYPE'] = 'redis'
 app.config['SESSION_REDIS'] = redis.from_url(os.getenv('REDIS_URL'))
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)  # Optional: set session lifetime
 print('this is running')
-
-
 
 # Enable CORS
 CORS(app)
