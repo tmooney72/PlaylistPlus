@@ -24,10 +24,10 @@ app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 Session(app)  # Initialize the session interface
 
-print('this is running')
+print('this is running') #this works
 
 # Enable CORS
-CORS(app)
+CORS(app)#this is 
 
 # Spotify configuration (shared across modules)
 client_id = 'e38944e89ce74ba691862c01183972ed'
@@ -35,7 +35,7 @@ client_secret = '64176f6f86694b958ecab491209cbfd6'
 redirect_uri = 'https://desirable-emotion-production.up.railway.app/api/callback'
 scope = 'playlist-read-private, playlist-modify-private, playlist-modify-public, playlist-modify-public' 
 
-from spotipy.oauth2 import SpotifyOAuth
+from spotipy.oauth2 import SpotifyOAuth #redis is working
 from spotipy.cache_handler import FlaskSessionCacheHandler
 from spotipy import Spotify
 
