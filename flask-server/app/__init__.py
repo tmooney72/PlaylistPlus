@@ -1,5 +1,5 @@
 import os
-from flask import Flask, session
+from flask import Flask, session, redirect
 from flask_cors import CORS
 import warnings
 from flask_session import Session
@@ -12,11 +12,21 @@ app = Flask(__name__)
 app.config['SCHEDULER_API_ENABLED'] = True  # Fixed syntax using square brackets
 app.config['SECRET_KEY'] = os.urandom(64)
 app.config['SESSION_TYPE'] = 'redis'
-app.config['SESSION_REDIS'] = redis.from_url(os.getenv('REDIS_URL'))
+
+# Redis configuration with fallback
+redis_url = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
+try:
+    app.config['SESSION_REDIS'] = redis.from_url(redis_url)
+except Exception as e:
+    print(f"Warning: Could not connect to Redis: {e}")
+    # Fallback to filesystem-based sessions if Redis is not available
+    app.config['SESSION_TYPE'] = 'filesystem'
+    app.config['SESSION_FILE_DIR'] = '/tmp/flask_session/'
+    app.config['SESSION_FILE_THRESHOLD'] = 100
+    app.config['SESSION_FILE_MODE'] = 384  # 0o600
+
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)  # Optional: set session lifetime
 print('this is running')
-
-
 
 # Enable CORS
 CORS(app)
@@ -41,6 +51,11 @@ sp_oauth = SpotifyOAuth(
     cache_handler=cache_handler,
     show_dialog=True)
 sp = Spotify(auth_manager=sp_oauth)
+
+@app.route('/api/auth')
+def auth():
+    auth_url = sp_oauth.get_authorize_url()
+    return redirect(auth_url)
 
 # Import the scheduler initialization function and initialize it
 from app.scheduler import init_scheduler
