@@ -2,34 +2,23 @@ import os
 from flask import Flask, session
 from flask_cors import CORS
 import warnings
-from flask_session import Session
-import redis
-from datetime import timedelta
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 # Create Flask app and set configuration
 app = Flask(__name__)
-app.config['SCHEDULER_API_ENABLED'] = True
+app.config['SCHEDULER_API_ENABLED'] = True  # Fixed syntax using square brackets
 app.config['SECRET_KEY'] = os.urandom(64)
-app.config['SESSION_TYPE'] = 'redis'
-
-# Redis configuration with fallback
-redis_url = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
-try:
-    app.config['SESSION_REDIS'] = redis.from_url(redis_url)
-except Exception as e:
-    print(f"Warning: Could not connect to Redis: {e}")
-    # Fallback to filesystem-based sessions if Redis is not available
-    app.config['SESSION_TYPE'] = 'filesystem'
-    app.config['SESSION_FILE_DIR'] = '/tmp/flask_session/'
-    app.config['SESSION_FILE_THRESHOLD'] = 100
-    app.config['SESSION_FILE_MODE'] = 384  # 0o600
-
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
 print('this is running')
 
-# Enable CORS
-CORS(app)
+# Enable CORS with specific configuration
+CORS(app, resources={
+    r"/api/*": {
+        "origins": ["http://localhost:5173"],
+        "supports_credentials": True,
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"]
+    }
+})
 
 # Spotify configuration (shared across modules)
 client_id = 'e38944e89ce74ba691862c01183972ed'
@@ -65,8 +54,5 @@ from app import logout
 from app import playlists
 from app import artist_notifications
 from app import search_artist
-
-# Initialize Flask-Session
-Session(app)
 
 

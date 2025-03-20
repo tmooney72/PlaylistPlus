@@ -7,7 +7,7 @@ def Playlists():
     if not sp_oauth.validate_token(cache_handler.get_cached_token()):
         print('token not valid')
         auth_url = sp_oauth.get_authorize_url()
-        return redirect(auth_url)
+        return redirect(auth_url) #changed
     else:
         print('token valid')
     
