@@ -1,5 +1,5 @@
 import os
-from flask import Flask, session, redirect
+from flask import Flask, session
 from flask_cors import CORS
 import warnings
 from flask_session import Session
@@ -9,7 +9,7 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 # Create Flask app and set configuration
 app = Flask(__name__)
-app.config['SCHEDULER_API_ENABLED'] = True  # Fixed syntax using square brackets
+app.config['SCHEDULER_API_ENABLED'] = True
 app.config['SECRET_KEY'] = os.urandom(64)
 app.config['SESSION_TYPE'] = 'redis'
 
@@ -25,7 +25,7 @@ except Exception as e:
     app.config['SESSION_FILE_THRESHOLD'] = 100
     app.config['SESSION_FILE_MODE'] = 384  # 0o600
 
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)  # Optional: set session lifetime
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
 print('this is running')
 
 # Enable CORS
@@ -51,11 +51,6 @@ sp_oauth = SpotifyOAuth(
     cache_handler=cache_handler,
     show_dialog=True)
 sp = Spotify(auth_manager=sp_oauth)
-
-@app.route('/api/auth')
-def auth():
-    auth_url = sp_oauth.get_authorize_url()
-    return redirect(auth_url)
 
 # Import the scheduler initialization function and initialize it
 from app.scheduler import init_scheduler

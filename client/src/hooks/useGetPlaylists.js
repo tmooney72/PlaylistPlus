@@ -25,21 +25,6 @@ const useGetPlaylists = () => {
 
     setLoading(true);
     try {
-      // First check if we're authenticated
-      const authResponse = await fetch("/api/authed", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-
-      const authData = await authResponse.json();
-      
-      if (!authData.Authed) {
-        // If not authenticated, redirect to the backend's auth endpoint
-        window.location.href = "/api/auth";
-        return null;
-      }
-
-      // If authenticated, get the playlists
       const response = await fetch("/api/Playlists", {
         method: "GET",
         headers: { "Content-Type": "application/json" },
@@ -53,7 +38,7 @@ const useGetPlaylists = () => {
       console.log(data);
       setPlaylists(data);
       localStorage.setItem("Playlists", JSON.stringify(data));
-      localStorage.setItem("Playlists_Timestamp", Date.now().toString());
+      localStorage.setItem("Playlists_Timestamp", Date.now().toString()); // Save timestamp
       return data;
     } catch (error) {
       setError(error.message);
