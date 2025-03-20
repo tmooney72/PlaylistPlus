@@ -6,11 +6,13 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 # Create Flask app and set configuration
 app = Flask(__name__)
-app.config['SCHEDULER_API_ENABLED'] = True  # Fixed syntax using square brackets
+app.config['SCHEDULER_API_ENABLED'] = True
 app.config['SECRET_KEY'] = os.urandom(64)
-print('this is running')
 
-
+# Redis session configuration
+app.config['SESSION_TYPE'] = 'redis'
+app.config['SESSION_REDIS'] = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
+app.config['PERMANENT_SESSION_LIFETIME'] = 7 * 24 * 60 * 60  # 7 days
 
 # Enable CORS
 CORS(app)
