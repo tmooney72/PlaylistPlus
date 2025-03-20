@@ -2,12 +2,18 @@ import os
 from flask import Flask, session
 from flask_cors import CORS
 import warnings
+from flask_session import Session
+import redis
+from datetime import timedelta
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 # Create Flask app and set configuration
 app = Flask(__name__)
 app.config['SCHEDULER_API_ENABLED'] = True  # Fixed syntax using square brackets
 app.config['SECRET_KEY'] = os.urandom(64)
+app.config['SESSION_TYPE'] = 'redis'
+app.config['SESSION_REDIS'] = redis.from_url(os.getenv('REDIS_URL'))
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)  # Optional: set session lifetime
 print('this is running')
 
 
@@ -49,5 +55,8 @@ from app import logout
 from app import playlists
 from app import artist_notifications
 from app import search_artist
+
+# Initialize Flask-Session
+Session(app)
 
 
