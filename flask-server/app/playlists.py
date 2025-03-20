@@ -15,6 +15,7 @@ def Playlists():
         try:
             if sp_oauth.is_token_expired(token_info):
                 token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
+                print(token_info)
                 # Update both storage locations
                 session['token_info'] = token_info
                 cache_handler.save_token_to_cache(token_info)
