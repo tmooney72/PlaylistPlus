@@ -6,14 +6,20 @@ WORKDIR /app
 COPY flask-server/requirements.txt ./
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Copy the rest of your Flask app code
+# Copy the Flask app code
 COPY flask-server/ .
 
-# Set a default port if $PORT isn't provided at runtime
+# Set environment variables
 ENV PORT=5000
+ENV PYTHONPATH=/app
+ENV PYTHONUNBUFFERED=1
 
-# Expose the port (hard-coded, as $PORT might not expand here)
+# Expose the port
 EXPOSE 5000
 
-# Use shell expansion to set the port; if $PORT isn't provided, it defaults to 5000.
-CMD ["sh", "-c", "gunicorn -w 4 -b 0.0.0.0:${PORT:-5000} run:app"]
+# Add a health check
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:${PORT:-5000}/ || exit 1
+
+# Use shell expansion to set the port and add logging
+CMD ["sh", "-c", "python -c 'import app; print(\"App imported successfully\")' && gunicorn -w 4 -b 0.0.0.0:${PORT:-5000} --log-level debug run:app"]
