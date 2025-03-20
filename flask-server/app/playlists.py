@@ -1,24 +1,29 @@
 from app import app, cache_handler, sp_oauth, sp
-from flask import redirect, jsonify
+from flask import jsonify, session
+from spotipy import Spotify
 
 @app.route('/api/Playlists')
 def Playlists():
     try:
-        # Get the token
-        token_info = cache_handler.get_cached_token()
+        # Get token from session
+        token_info = session.get('token_info')
         if not token_info:
-            return jsonify({"error": "No token found"}), 401
+            return jsonify({"error": "Not authenticated"}), 401
 
         # Check if token needs refresh
         if sp_oauth.is_token_expired(token_info):
-            token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
-            cache_handler.save_token_to_cache(token_info)
+            try:
+                token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
+                session['token_info'] = token_info
+                cache_handler.save_token_to_cache(token_info)
+            except:
+                return jsonify({"error": "Token refresh failed"}), 401
 
         # Create a new Spotify client with the current token
-        sp.set_auth(token_info['access_token'])
+        current_sp = Spotify(auth=token_info['access_token'])
     
         # Fetch the current user's playlists
-        playlists = sp.current_user_playlists()
+        playlists = current_sp.current_user_playlists()
         playlists_data = []
 
         for pl in playlists['items']:
@@ -31,11 +36,11 @@ def Playlists():
             playlist_id = playlist_url.split("/")[-1].split("?")[0]
             
             # Fetch tracks for this playlist
-            results = sp.playlist_tracks(playlist_id)
+            results = current_sp.playlist_tracks(playlist_id)
             all_tracks = results['items']
             while results['next']:
                 try:
-                    results = sp.next(results)
+                    results = current_sp.next(results)
                     all_tracks.extend(results['items'])
                 except Exception as e:
                     print("Error fetching next batch of tracks:", e)
