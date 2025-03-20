@@ -10,8 +10,20 @@ def Playlists():
     # Use session token if available, otherwise use cache token
     token_info = session_token if session_token else cache_token
     
+    # Try to refresh the token if it exists
+    if token_info:
+        try:
+            if sp_oauth.is_token_expired(token_info):
+                token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
+                # Update both storage locations
+                session['token_info'] = token_info
+                cache_handler.save_token_to_cache(token_info)
+        except Exception as e:
+            print(f"Error refreshing token: {e}")
+            token_info = None
+    
     # Validate the token
-    if not token_info or not sp_oauth.validate_token(token_info):
+    if not token_info:
         print('token not valid')
         auth_url = sp_oauth.get_authorize_url()
         return redirect(auth_url)
