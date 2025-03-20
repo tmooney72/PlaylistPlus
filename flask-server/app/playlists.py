@@ -8,8 +8,8 @@ def Playlists():
 
     
     cache_token = cache_handler.get_cached_token()
-    print("Session contents:", dict(session))
-    print("Cache handler contents:", cache_handler.get_cached_token())
+    print("Session contents in playlists:", session_token)
+    print("Cache handler contents in playlists:", cache_token)
     
     # Use session token if available, otherwise use cache token
     token_info = session_token if session_token else cache_token
