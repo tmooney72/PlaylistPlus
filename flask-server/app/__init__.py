@@ -11,15 +11,13 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 app = Flask(__name__)
 app.config['SCHEDULER_API_ENABLED'] = True
 app.config['SECRET_KEY'] = os.urandom(64)
-
-# Redis session configuration
 app.config['SESSION_TYPE'] = 'redis'
 redis_url = os.getenv('REDIS_URL')
 if not redis_url:
     raise ValueError("REDIS_URL environment variable is not set")
 app.config['SESSION_REDIS'] = redis.from_url(redis_url)
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
-app.config['SESSION_COOKIE_SECURE'] = True
+app.config['SESSION_COOKIE_SECURE'] = False  # Changed to False for local development
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 Session(app)  # Initialize the session interface
@@ -32,7 +30,8 @@ CORS(app,
      resources={r"/api/*": {
          "origins": ["http://localhost:5173"],
          "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-         "allow_headers": ["Content-Type", "Authorization"]
+         "allow_headers": ["Content-Type", "Authorization", "Cookie"],
+         "expose_headers": ["Set-Cookie"]
      }})
 
 # Spotify configuration (shared across modules)

@@ -4,11 +4,11 @@ import tsconfigPaths from "vite-tsconfig-paths"
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), , tsconfigPaths()],
+  plugins: [react(), tsconfigPaths()],
   server: {
     proxy: {
       '/api': {
-        target:'https://desirable-emotion-production.up.railway.app',
+        target: 'https://desirable-emotion-production.up.railway.app',
         changeOrigin: true,
         secure: false,
         ws: true,
@@ -19,6 +19,13 @@ export default defineConfig({
               proxyReq.setHeader('Content-Type', 'application/json');
               proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
               proxyReq.write(bodyData);
+            }
+          });
+          proxy.on('proxyRes', (proxyRes, req, res) => {
+            // Forward cookies from the backend
+            const cookies = proxyRes.headers['set-cookie'];
+            if (cookies) {
+              res.setHeader('Set-Cookie', cookies);
             }
           });
         }
