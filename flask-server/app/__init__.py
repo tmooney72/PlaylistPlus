@@ -4,15 +4,26 @@ from flask_cors import CORS
 import warnings
 import redis
 from datetime import timedelta
+from flask_session import Session
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 # Create Flask app and set configuration
 app = Flask(__name__)
 app.config['SCHEDULER_API_ENABLED'] = True
 app.config['SECRET_KEY'] = os.urandom(64)
+
+# Redis session configuration
 app.config['SESSION_TYPE'] = 'redis'
-app.config['SESSION_REDIS'] = redis.from_url(os.getenv('REDIS_URL'))
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)  # Optional: set session lifetime
+redis_url = os.getenv('REDIS_URL')
+if not redis_url:
+    raise ValueError("REDIS_URL environment variable is not set")
+app.config['SESSION_REDIS'] = redis.from_url(redis_url)
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
+app.config['SESSION_COOKIE_SECURE'] = True
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+Session(app)  # Initialize the session interface
+
 print('this is running')
 
 # Enable CORS

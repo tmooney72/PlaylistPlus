@@ -1,5 +1,5 @@
 from app import app, cache_handler, sp_oauth
-from flask import request, redirect
+from flask import request, redirect, session
 
 @app.route('/api/callback')
 def callback():
@@ -16,7 +16,11 @@ def callback():
         if isinstance(token_info, str):
             token_info = {"access_token": token_info}
 
-        # The token is automatically stored in Flask's session via the cache handler
+        # Explicitly store the token in the session
+        session['token_info'] = token_info
+        session.modified = True  # Ensure the session is saved
+
+        # The token is also stored via the cache handler
         return redirect("http://localhost:5173/Home")
     except Exception as e:
         print(f"Error in callback: {e}")
