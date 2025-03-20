@@ -26,8 +26,14 @@ Session(app)  # Initialize the session interface
 
 print('this is running') #this works
 
-# Enable CORS
-CORS(app)#this is 
+# Enable CORS with proper configuration
+CORS(app, 
+     supports_credentials=True,
+     resources={r"/api/*": {
+         "origins": ["http://localhost:5173"],
+         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+         "allow_headers": ["Content-Type", "Authorization"]
+     }})
 
 # Spotify configuration (shared across modules)
 client_id = 'e38944e89ce74ba691862c01183972ed'

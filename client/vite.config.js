@@ -8,8 +8,20 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target:'https://desirable-emotion-production.up.railway.app', // Your Flask app's URL
+        target:'https://desirable-emotion-production.up.railway.app',
         changeOrigin: true,
+        secure: false,
+        ws: true,
+        configure: (proxy, _options) => {
+          proxy.on('proxyReq', (proxyReq, req, _res) => {
+            if (req.body) {
+              const bodyData = JSON.stringify(req.body);
+              proxyReq.setHeader('Content-Type', 'application/json');
+              proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+              proxyReq.write(bodyData);
+            }
+          });
+        }
       },
     },
     watch: {
