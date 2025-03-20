@@ -5,10 +5,11 @@ from flask import redirect, session
 def Playlists():
     # Check both session and cache handler
     session_token = session.get('token_info')
-    print(session_token, 'session token')
+
     
     cache_token = cache_handler.get_cached_token()
-    print(cache_token, 'cache token')
+    print("Session contents:", dict(session))
+    print("Cache handler contents:", cache_handler.get_cached_token())
     
     # Use session token if available, otherwise use cache token
     token_info = session_token if session_token else cache_token

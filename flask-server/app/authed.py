@@ -6,6 +6,8 @@ def authed():
     # Check both session and cache handler
     session_token = session.get('token_info')
     cache_token = cache_handler.get_cached_token()
+    print(session_token, 'session token in authed')
+    print(cache_token, 'cache token in authed')
     
     # Use session token if available, otherwise use cache token
     token_info = session_token if session_token else cache_token
