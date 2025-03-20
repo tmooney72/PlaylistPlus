@@ -1,22 +1,15 @@
-from app import app, cache_handler, sp_oauth
-from flask import redirect, session
-from spotipy import Spotify
+from app import app, cache_handler, sp_oauth, sp
+from flask import redirect
 
 @app.route('/api/Playlists')
 def Playlists():
-    # Check token in both session and cache
-    token_info = session.get('token_info') or cache_handler.get_cached_token()
-    
     # Validate the token
-    if not token_info or not sp_oauth.validate_token(token_info):
+    if not sp_oauth.validate_token(cache_handler.get_cached_token()):
         print('token not valid')
-        auth_url = sp_oauth.get_authorize_url(state='playlists')
-        return redirect(auth_url)
+        auth_url = sp_oauth.get_authorize_url()
+        return redirect(auth_url) #changed
     else:
         print('token valid')
-    
-    # Create a new Spotify client with the token
-    sp = Spotify(auth_manager=sp_oauth)
     
     # Fetch the current user's playlists
     playlists = sp.current_user_playlists()

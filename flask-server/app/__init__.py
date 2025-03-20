@@ -10,15 +10,10 @@ app.config['SCHEDULER_API_ENABLED'] = True  # Fixed syntax using square brackets
 app.config['SECRET_KEY'] = os.urandom(64)
 print('this is running')
 
-# Enable CORS with specific configuration
-CORS(app, resources={
-    r"/api/*": {
-        "origins": ["http://localhost:5173"],
-        "supports_credentials": True,
-        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"]
-    }
-})
+
+
+# Enable CORS
+CORS(app)
 
 # Spotify configuration (shared across modules)
 client_id = 'e38944e89ce74ba691862c01183972ed'
