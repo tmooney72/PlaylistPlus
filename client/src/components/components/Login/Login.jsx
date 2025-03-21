@@ -118,9 +118,9 @@ const LoginLogoutPage = () => {
       } else {
         result = await loginUser(formData.email, formData.password);
       }
-      log(result);
       setIsLoggedIn(true);
-      window.location.href = "https://desirable-emotion-production.up.railway.app/api";
+      const userr = JSON.parse(localStorage.getItem("user"))
+      window.location.href = `https://desirable-emotion-production.up.railway.app/api?uid=${userr.uid}`;
     } catch (err) {
       console.error("Error during registration/login:", err);
     }

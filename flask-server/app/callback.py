@@ -6,6 +6,7 @@ from app.redisUser import redis_helper
 def callback():
     try:
         # Get the authorization code from the request
+        uid = request.args.get('state')
         code = request.args.get('code')
         if not code:
             return "Authorization code missing", 400
@@ -19,7 +20,7 @@ def callback():
 
         # Explicitly store the token in the session
         session['token_info'] = token_info
-        redis_helper.set_value('testing', 'test', expire_seconds = 200)
+        redis_helper.set_value(uid, token_info, expire_seconds = 1800)
         session.modified = True  # Ensure the session is saved
 
         # The token is also stored via the cache handler
