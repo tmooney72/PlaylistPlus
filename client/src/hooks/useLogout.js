@@ -5,6 +5,7 @@ const useLogout = async () => {
     // Call the backend logout endpoint
     const response = await fetch('https://desirable-emotion-production.up.railway.app/api/logout', {
       method: 'POST',
+      headers: { "Content-Type": "application/json"},
       credentials: 'include', // Important for sending cookies
     });
 
