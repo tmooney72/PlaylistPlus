@@ -2,7 +2,7 @@ from app import app, cache_handler, sp_oauth
 from flask import redirect, request, session, jsonify
 from app.redisUser import redis_helper 
 
-@app.route('/api', methods=['POST'])
+@app.route('/api')
 def home():
     # Check if there's a valid cached token, if not, redirect to Spotify login
     uid = request.args.get('uid')
