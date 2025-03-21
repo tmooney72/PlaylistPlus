@@ -20,7 +20,8 @@ def callback():
 
         # Explicitly store the token in the session
         session['token_info'] = token_info
-        redis_helper.set_value(uid, token_info, expire_seconds = 1800)
+        token_info_str = json.dumps(token_info)
+        redis_helper.set_value(uid, token_info_str, expire_seconds = 1800)
         session.modified = True  # Ensure the session is saved
 
         # The token is also stored via the cache handler
