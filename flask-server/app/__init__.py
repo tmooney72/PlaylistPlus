@@ -17,9 +17,9 @@ if not redis_url:
     raise ValueError("REDIS_URL environment variable is not set")
 app.config['SESSION_REDIS'] = redis.from_url(redis_url)
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
-app.config['SESSION_COOKIE_SECURE'] = False  # Changed to False for local development
+app.config['SESSION_COOKIE_SECURE'] = True  # Changed to False for local development
 app.config['SESSION_COOKIE_HTTPONLY'] = True
-app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 Session(app)  # Initialize the session interface
 
 print('this is running') #this works
