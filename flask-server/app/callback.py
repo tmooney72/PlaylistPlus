@@ -1,5 +1,6 @@
 from app import app, cache_handler, sp_oauth
 from flask import request, redirect, session
+from app.redisUser import redis_helper
 
 @app.route('/api/callback')
 def callback():
@@ -18,6 +19,7 @@ def callback():
 
         # Explicitly store the token in the session
         session['token_info'] = token_info
+        redis_helper.set_value('testing', 'test', expire_seconds = 200)
         session.modified = True  # Ensure the session is saved
 
         # The token is also stored via the cache handler
