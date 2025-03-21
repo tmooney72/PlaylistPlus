@@ -3,7 +3,7 @@ import { getAuth, signOut } from "firebase/auth";
 const useLogout = async () => {
   try {
     // Call the backend logout endpoint
-    const response = await fetch('desirable-emotion-production.up.railway.app/api/logout', {
+    const response = await fetch('https://desirable-emotion-production.up.railway.app/api/logout', {
       method: 'POST',
       credentials: 'include', // Important for sending cookies
     });
