@@ -12,6 +12,7 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
         ws: true,
+        cors: true,
         configure: (proxy, _options) => {
           proxy.on('proxyReq', (proxyReq, req, _res) => {
             if (req.body) {

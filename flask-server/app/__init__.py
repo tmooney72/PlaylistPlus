@@ -27,12 +27,8 @@ print('this is running') #this works
 # Enable CORS with proper configuration
 CORS(app, 
      supports_credentials=True,
-     resources={r"/api/*": {
-         "origins": ["http://localhost:5173"],
-         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-         "allow_headers": ["Content-Type", "Authorization", "Cookie"],
-         "expose_headers": ["Set-Cookie"]
-     }})
+     origins=["http://localhost:5173"],
+     )
 
 # Add a decorator to handle preflight requests
 @app.after_request
