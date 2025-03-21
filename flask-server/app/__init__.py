@@ -16,7 +16,7 @@ redis_url = os.getenv('REDIS_URL')
 if not redis_url:
     raise ValueError("REDIS_URL environment variable is not set")
 app.config['SESSION_REDIS'] = redis.from_url(redis_url)
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 app.config['SESSION_COOKIE_SECURE'] = True  # Changed to False for local development
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'
@@ -27,13 +27,13 @@ print('this is running') #this works
 # Enable CORS with proper configuration
 CORS(app, 
      supports_credentials=True,
-     origins=["http://localhost:5173"],
+     origins=["https://playlist-plus.vercel.app/"],
      )
 
 # Add a decorator to handle preflight requests
 @app.after_request
 def after_request(response):
-    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:5173')
+    response.headers.add('Access-Control-Allow-Origin', 'https://playlist-plus.vercel.app/')
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,Cookie')
     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
     response.headers.add('Access-Control-Allow-Credentials', 'true')

@@ -118,12 +118,13 @@ const Playlists = () => {
 
   async function handleCleanPlaylist(playlistName) {
     try {
-      const response = await fetch('/api/CleanPlaylist', {
+      const response = await fetch('https://desirable-emotion-production.up.railway.app/api/CleanPlaylist', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ data: playlistName }),
+        credentials: "include",
       });
       const result = await response.json();
       setPlaylist(result.Playlist[0]);

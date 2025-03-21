@@ -8,4 +8,4 @@ def home():
     if not token_info or not sp_oauth.validate_token(token_info):
         auth_url = sp_oauth.get_authorize_url()
         return redirect(auth_url)
-    return redirect("http://localhost:5173/Home")
+    return redirect("https://playlist-plus.vercel.app/Home")

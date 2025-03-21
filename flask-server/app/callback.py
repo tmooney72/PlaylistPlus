@@ -21,7 +21,7 @@ def callback():
         session.modified = True  # Ensure the session is saved
 
         # The token is also stored via the cache handler
-        return redirect("http://localhost:5173/Home")
+        return redirect("https://playlist-plus.vercel.app/Home")
     except Exception as e:
         print(f"Error in callback: {e}")
         return "An error occurred during the callback process", 500

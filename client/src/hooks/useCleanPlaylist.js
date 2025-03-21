@@ -1,6 +1,6 @@
 const useCleanPlaylist = () => {
   const cleanPlaylist = async (playlist) => {
-    const response = await fetch('/api/CleanPlaylist', {
+    const response = await fetch('https://desirable-emotion-production.up.railway.app/api/CleanPlaylist', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

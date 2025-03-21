@@ -9,11 +9,12 @@ const useSearchForArtist = () => {
     const SearchForArtist = async (query) => {
   setSearching(true);
   try {
-  const response = await fetch("/api/SearchArtist", {
+  const response = await fetch("https://desirable-emotion-production.up.railway.app/api/SearchArtist", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
         data: query }),
+    credentials: "include",
   });
   if (!response.ok) {
     throw new Error(`HTTP error! Status: ${response.status}`);

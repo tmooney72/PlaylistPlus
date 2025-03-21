@@ -9,7 +9,7 @@ const useGetNotifications = () => {
     const getNotifications = async(artist) => {
   setSearching(true);
   try {
-  const response = await fetch("/api/ArtistNotifications", {
+  const response = await fetch("https://desirable-emotion-production.up.railway.app/api/ArtistNotifications", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

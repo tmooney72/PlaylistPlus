@@ -8,12 +8,6 @@ const useGetPlaylists = () => {
   const getPlaylists = async () => {
     const storedData = localStorage.getItem("Playlists");
     const storedTimestamp = localStorage.getItem("Playlists_Timestamp");
-    const response = await fetch("https://desirable-emotion-production.up.railway.app/api/Playlists", {
-      method: "GET",
-      headers: { "Content-Type": "application/json", 'Cookie': 'session=.eJx1ksluo0AURX8lYt1IgDFDdmYwBkMcRmNvEENhymZyVYExUf49KK1OL1q9PU969-q890GR7gbaBLZlR71-UGmeA4yTb0i9UoqrCKIiS_t4rtziMjAqdt1Jeiu3RsdNcgGu4jXjHdCRw7nADygjdbpAIxAzxAwqp53MTYAym6zxaGEpVI06PocTrVbBVJNNfjHH_F7KRnkMXYy50rzIkcondtxHgsmmLYtzfkosSR_Xw1zHN11Wd1Jw9vf3jtluc5ELBXEwoD6gO9T9lMlvZ8ZzCTO0gzVGoCJQ1j1gp67C1TOpYDE7eRHZZWj1Op4n6e5kvZvkazbLNHsNzD47-OfU0oIb2FUp7dSWphTi4VABvR1q6WQAsnYedllQvygw9RABnKSEemVFnuN5fsUzfzlc_K0EZiEIlAuofqRu3I06Nb5zSvZxkgn-ST4GHoKsfcfa6qS9LbbRzDZF42_2gyj4ut_LpDG1OuqPHrLSOBOjp-2Ou_f23dDCBq8EdL26QXExCl8MOgwl-rhcIN9NGW0_-J3z8LPGSw6c6cl8f9jL5tIf510PljYvfZ0-a4gJ3XQFLJ90j-CYEvDy72DIapj_l_9gBNLiz5Yl6PeDked3mgJSBBD1-fkFHJzY1A.Z9uJJA.lSXfXIxegnwKGKooi9kzlaZAIA8' },
-      credentials: "include",
-    });
-    console.log(response, 'response')
 
     if (storedData && storedTimestamp) {
       const now = Date.now();
@@ -31,9 +25,9 @@ const useGetPlaylists = () => {
 
     setLoading(true);
     try {
-      const response = await fetch("/api/Playlists", {
+      const response = await fetch("https://desirable-emotion-production.up.railway.app/api/Playlists", {
         method: "GET",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", 'Cookie': 'session=.eJx1ksluo0AURX8lYt1IgDFDdmYwBkMcRmNvEENhymZyVYExUf49KK1OL1q9PU969-q890GR7gbaBLZlR71-UGmeA4yTb0i9UoqrCKIiS_t4rtziMjAqdt1Jeiu3RsdNcgGu4jXjHdCRw7nADygjdbpAIxAzxAwqp53MTYAym6zxaGEpVI06PocTrVbBVJNNfjHH_F7KRnkMXYy50rzIkcondtxHgsmmLYtzfkosSR_Xw1zHN11Wd1Jw9vf3jtluc5ELBXEwoD6gO9T9lMlvZ8ZzCTO0gzVGoCJQ1j1gp67C1TOpYDE7eRHZZWj1Op4n6e5kvZvkazbLNHsNzD47-OfU0oIb2FUp7dSWphTi4VABvR1q6WQAsnYedllQvygw9RABnKSEemVFnuN5fsUzfzlc_K0EZiEIlAuofqRu3I06Nb5zSvZxkgn-ST4GHoKsfcfa6qS9LbbRzDZF42_2gyj4ut_LpDG1OuqPHrLSOBOjp-2Ou_f23dDCBq8EdL26QXExCl8MOgwl-rhcIN9NGW0_-J3z8LPGSw6c6cl8f9jL5tIf510PljYvfZ0-a4gJ3XQFLJ90j-CYEvDy72DIapj_l_9gBNLiz5Yl6PeDked3mgJSBBD1-fkFHJzY1A.Z9uJJA.lSXfXIxegnwKGKooi9kzlaZAIA8' },
         credentials: "include",
       });
 
