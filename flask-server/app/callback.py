@@ -1,6 +1,7 @@
 from app import app, cache_handler, sp_oauth
 from flask import request, redirect, session
 from app.redisUser import redis_helper
+import json
 
 @app.route('/api/callback')
 def callback():
