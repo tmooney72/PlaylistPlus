@@ -115,7 +115,7 @@ const Navbar = () => {
   }, [user]);
 
   const login = () => {
-    window.location.href = "http://localhost:5173/Login";
+    window.location.href = "https://playlist-plus.vercel.app/Login";
   };
 
   const handleClick = () => {

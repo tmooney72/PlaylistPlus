@@ -27,13 +27,13 @@ print('this is running') #this works
 # Enable CORS with proper configuration
 CORS(app, 
      supports_credentials=True,
-     origins=["https://playlist-plus.vercel.app/"],
+     origins=["https://playlist-plus.vercel.app"],
      )
 
 # Add a decorator to handle preflight requests
 @app.after_request
 def after_request(response):
-    response.headers.add('Access-Control-Allow-Origin', 'https://playlist-plus.vercel.app/')
+    response.headers.add('Access-Control-Allow-Origin', 'https://playlist-plus.vercel.app')
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,Cookie')
     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
     response.headers.add('Access-Control-Allow-Credentials', 'true')
