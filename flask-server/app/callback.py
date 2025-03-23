@@ -20,12 +20,8 @@ def callback():
             token_info = {"access_token": token_info}
 
         # Explicitly store the token in the session
-        session['token_info'] = token_info
         token_info_str = json.dumps(token_info)
         redis_helper.set_value(uid, token_info_str, expire_seconds = 1800)
-        session.modified = True  # Ensure the session is saved
-
-        # The token is also stored via the cache handler
         return redirect("https://playlist-plus.vercel.app/Home")
     except Exception as e:
         print(f"Error in callback: {e}")

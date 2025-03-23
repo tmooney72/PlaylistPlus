@@ -8,6 +8,7 @@ const useGetPlaylists = () => {
   const getPlaylists = async () => {
     const storedData = localStorage.getItem("Playlists");
     const storedTimestamp = localStorage.getItem("Playlists_Timestamp");
+    const uid = localStorage.getItem('user').uid
 
     if (storedData && storedTimestamp) {
       const now = Date.now();
@@ -28,6 +29,9 @@ const useGetPlaylists = () => {
       const response = await fetch("https://desirable-emotion-production.up.railway.app/api/Playlists", {
         method: "GET",
         headers: { "Content-Type": "application/json"},
+        body: JSON.stringify({
+          data: uid
+        }),
         credentials: "include",
       });
 

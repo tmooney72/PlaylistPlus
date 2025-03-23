@@ -1,18 +1,19 @@
 from app import app, cache_handler, sp_oauth, sp
-from flask import redirect, session
+from flask import redirect, session, request
+import json
+from app.redisUser import redis_helper
 
-@app.route('/api/Playlists')
+@app.route('/api/Playlists', methods = ['get'])
 def Playlists():
-    # Check both session and cache handler
-    session_token = session.get('token_info')
-
-    
-    cache_token = cache_handler.get_cached_token()
-    print("Session contents in playlists:", session_token)
-    print("Cache handler contents in playlists:", cache_token)
+    uid = request.get_json()
+    uid = uid['data']
+    token_info_str = redis_helper.get_value(uid)
+    token_info = json.loads(token_info_str)
+    if not sp_oauth.validate_token(token_info):
+        auth_url = sp_oauth.get_authorize_url(state='uid')
+        return redirect(auth_url)
     
     # Use session token if available, otherwise use cache token
-    token_info = session_token if session_token else cache_token
     
     # Try to refresh the token if it exists
     if token_info:
@@ -21,19 +22,11 @@ def Playlists():
                 token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
                 print(token_info)
                 # Update both storage locations
-                session['token_info'] = token_info
-                cache_handler.save_token_to_cache(token_info)
+                redis_helper.set_value(uid, token_info)
         except Exception as e:
             print(f"Error refreshing token: {e}")
             token_info = None
     
-    # Validate the token
-    if not token_info:
-        print('token not valid')
-        auth_url = sp_oauth.get_authorize_url()
-        return redirect(auth_url)
-    else:
-        print('token valid')
     
     # Fetch the current user's playlists
     playlists = sp.current_user_playlists()

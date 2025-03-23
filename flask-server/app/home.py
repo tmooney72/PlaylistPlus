@@ -8,7 +8,5 @@ def home():
     uid = request.args.get('uid')
     if not uid:
         return jsonify({'error': 'No UID provided'}), 400
-    token_info = cache_handler.get_cached_token()
-    if not token_info or not sp_oauth.validate_token(token_info):
-        auth_url = sp_oauth.get_authorize_url(state=uid)
-        return redirect(auth_url)
+    auth_url = sp_oauth.get_authorize_url(state=uid)
+    return redirect(auth_url)
