@@ -3,7 +3,7 @@ from flask import redirect, session, request
 import json
 from app.redisUser import redis_helper
 
-@app.route('/api/Playlists', methods = ['get'])
+@app.route('/api/Playlists', methods = ['post'])
 def Playlists():
     uid = request.get_json()
     uid = uid['data']
