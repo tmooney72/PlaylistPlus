@@ -8,7 +8,9 @@ const useGetPlaylists = () => {
   const getPlaylists = async () => {
     const storedData = localStorage.getItem("Playlists");
     const storedTimestamp = localStorage.getItem("Playlists_Timestamp");
-    const uid = localStorage.getItem('user').uid
+    const userr = localStorage.getItem('user')
+    const uid = JSON.parse(userr).uid
+    console.log(uid)
 
     if (storedData && storedTimestamp) {
       const now = Date.now();
