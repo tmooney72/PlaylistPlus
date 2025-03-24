@@ -27,7 +27,7 @@ const useGetPlaylists = () => {
     setLoading(true);
     try {
       const response = await fetch("https://desirable-emotion-production.up.railway.app/api/Playlists", {
-        method: "GET",
+        method: "POST",
         headers: { "Content-Type": "application/json"},
         body: JSON.stringify({
           data: uid
