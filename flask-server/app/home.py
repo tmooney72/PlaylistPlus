@@ -1,4 +1,4 @@
-from app import app, cache_handler, sp_oauth
+from app import app, sp_oauth
 from flask import redirect, request, session, jsonify
 from app.redisUser import redis_helper 
 

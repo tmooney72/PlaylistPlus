@@ -1,5 +1,5 @@
-from app import app, cache_handler, sp_oauth
-from flask import request, redirect, session
+from app import app, sp_oauth
+from flask import request, redirect
 from app.redisUser import redis_helper
 import json
 
