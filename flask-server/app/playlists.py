@@ -13,7 +13,6 @@ def Playlists():
         auth_url = sp_oauth.get_authorize_url(state='uid')
         return redirect(auth_url)
     
-    # Use session token if available, otherwise use cache token
     
     # Try to refresh the token if it exists
     if token_info:

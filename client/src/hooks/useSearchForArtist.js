@@ -5,6 +5,8 @@ const useSearchForArtist = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState(null);
+  const userr = localStorage.getItem('user')
+  const uid = JSON.parse(userr).uid
 
     const SearchForArtist = async (query) => {
   setSearching(true);
@@ -13,7 +15,8 @@ const useSearchForArtist = () => {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-        data: query }),
+        data: query,
+        uid: uid }),
     credentials: "include",
   });
   if (!response.ok) {
