@@ -1,26 +1,42 @@
 import React from 'react';
-import { Box, Button, Typography, Grid, Stack, Container } from '@mui/material';
+import { Box, Button, Typography, Grid, Stack, Container, Paper, IconButton } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
+import MusicNoteIcon from '@mui/icons-material/MusicNote';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import InstagramIcon from '@mui/icons-material/Instagram';
 
 const features = [
   {
     icon: <PlaylistPlayIcon fontSize="large" color="primary" />,
-    title: "Create Custom Playlists",
-    description: "Effortlessly build, edit, and share playlists tailored to your taste."
+    title: "Smart Playlist Management",
+    description: "Create, organize, and clean up your playlists with AI-powered tools."
   },
   {
     icon: <NotificationsActiveIcon fontSize="large" color="primary" />,
-    title: "Stay Informed",
-    description: "Receive real-time notifications when your favorite artists drop new tracks."
+    title: "Artist Notifications",
+    description: "Get instant alerts when your favorite artists release new music."
   },
   {
     icon: <LibraryMusicIcon fontSize="large" color="primary" />,
-    title: "Discover New Music",
-    description: "Explore curated selections and discover fresh sounds from emerging talents."
+    title: "Music Discovery",
+    description: "Explore new artists and tracks based on your listening history."
   },
+  {
+    icon: <TrendingUpIcon fontSize="large" color="primary" />,
+    title: "Trending Artists",
+    description: "Stay updated with the latest trending artists in your favorite genres."
+  },
+  {
+    icon: <AutoAwesomeIcon fontSize="large" color="primary" />,
+    title: "AI-Powered Features",
+    description: "Let AI help you organize and discover music that matches your taste."
+  }
 ];
 
 const HomePage = () => {
@@ -75,28 +91,51 @@ const HomePage = () => {
               textShadow: '1px 1px 2px rgba(0,0,0,0.2)'
             }}
           >
-            Your ultimate music hub to create personalized playlists, stay informed, and discover new music.
+            Your AI-powered music companion for creating perfect playlists and discovering new artists.
           </Typography>
-          <Button
-            variant="contained"
-            component={RouterLink}
-            to="/playlists"
-            sx={{
-              fontSize: '1.1rem',
-              px: 6,
-              py: 2,
-              borderRadius: '30px',
-              background: 'linear-gradient(45deg, #FF6B6B, #4ECDC4)',
-              boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
-              transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-              '&:hover': {
-                transform: 'translateY(-2px)',
-                boxShadow: '0 6px 20px rgba(0,0,0,0.3)',
-              }
-            }}
-          >
-            Explore Now
-          </Button>
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center">
+            <Button
+              variant="contained"
+              component={RouterLink}
+              to="/playlists"
+              startIcon={<PlaylistPlayIcon />}
+              sx={{
+                fontSize: '1.1rem',
+                px: 6,
+                py: 2,
+                borderRadius: '30px',
+                background: 'linear-gradient(45deg, #FF6B6B, #4ECDC4)',
+                boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 6px 20px rgba(0,0,0,0.3)',
+                }
+              }}
+            >
+              Explore Playlists
+            </Button>
+            <Button
+              variant="outlined"
+              component={RouterLink}
+              to="/artists"
+              startIcon={<MusicNoteIcon />}
+              sx={{
+                fontSize: '1.1rem',
+                px: 6,
+                py: 2,
+                borderRadius: '30px',
+                borderColor: '#4ECDC4',
+                color: '#4ECDC4',
+                '&:hover': {
+                  borderColor: '#FF6B6B',
+                  color: '#FF6B6B',
+                }
+              }}
+            >
+              Find Artists
+            </Button>
+          </Stack>
         </Box>
       </Box>
 
@@ -113,12 +152,13 @@ const HomePage = () => {
             WebkitTextFillColor: 'transparent',
           }}
         >
-          What We Do
+          Why Choose PlaylistPlus?
         </Typography>
         <Grid container spacing={4}>
           {features.map((feature, index) => (
             <Grid item xs={12} md={4} key={index}>
-              <Box
+              <Paper
+                elevation={0}
                 sx={{
                   p: 4,
                   textAlign: 'center',
@@ -127,6 +167,7 @@ const HomePage = () => {
                   backdropFilter: 'blur(10px)',
                   border: '1px solid rgba(255,255,255,0.1)',
                   transition: 'all 0.3s ease',
+                  height: '100%',
                   '&:hover': {
                     transform: 'translateY(-8px)',
                     boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
@@ -168,11 +209,49 @@ const HomePage = () => {
                 >
                   {feature.description}
                 </Typography>
-              </Box>
+              </Paper>
             </Grid>
           ))}
         </Grid>
       </Container>
+
+      {/* Stats Section */}
+      <Box sx={{ py: 8, background: 'rgba(255,255,255,0.02)' }}>
+        <Container>
+          <Grid container spacing={4} justifyContent="center">
+            <Grid item xs={12} md={4}>
+              <Box sx={{ textAlign: 'center' }}>
+                <Typography variant="h3" sx={{ color: '#4ECDC4', fontWeight: 'bold' }}>
+                  100K+
+                </Typography>
+                <Typography variant="h6" sx={{ color: 'rgba(255,255,255,0.7)' }}>
+                  Active Users
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <Box sx={{ textAlign: 'center' }}>
+                <Typography variant="h3" sx={{ color: '#4ECDC4', fontWeight: 'bold' }}>
+                  1M+
+                </Typography>
+                <Typography variant="h6" sx={{ color: 'rgba(255,255,255,0.7)' }}>
+                  Playlists Created
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <Box sx={{ textAlign: 'center' }}>
+                <Typography variant="h3" sx={{ color: '#4ECDC4', fontWeight: 'bold' }}>
+                  50K+
+                </Typography>
+                <Typography variant="h6" sx={{ color: 'rgba(255,255,255,0.7)' }}>
+                  Artists Tracked
+                </Typography>
+              </Box>
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
 
       {/* Footer */}
       <Box
@@ -183,18 +262,63 @@ const HomePage = () => {
           background: 'rgba(0,0,0,0.3)',
         }}
       >
-        <Typography 
-          variant="body2" 
-          sx={{ 
-            color: 'rgba(255,255,255,0.6)',
-            fontWeight: '500'
-          }}
-        >
-          © {new Date().getFullYear()} PlaylistPlus. All rights reserved.
-        </Typography>
+        <Container>
+          <Grid container spacing={4}>
+            <Grid item xs={12} md={4}>
+              <Typography variant="h6" sx={{ mb: 2, color: '#4ECDC4' }}>
+                PlaylistPlus
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.6)' }}>
+                Your AI-powered music companion for creating perfect playlists and discovering new artists.
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <Typography variant="h6" sx={{ mb: 2, color: '#4ECDC4' }}>
+                Quick Links
+              </Typography>
+              <Stack spacing={1}>
+                <Button component={RouterLink} to="/playlists" color="inherit">
+                  Playlists
+                </Button>
+                <Button component={RouterLink} to="/artists" color="inherit">
+                  Artists
+                </Button>
+                <Button component={RouterLink} to="/notifications" color="inherit">
+                  Notifications
+                </Button>
+              </Stack>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <Typography variant="h6" sx={{ mb: 2, color: '#4ECDC4' }}>
+                Connect With Us
+              </Typography>
+              <Stack direction="row" spacing={2} justifyContent="center">
+                <IconButton color="inherit">
+                  <FacebookIcon />
+                </IconButton>
+                <IconButton color="inherit">
+                  <TwitterIcon />
+                </IconButton>
+                <IconButton color="inherit">
+                  <InstagramIcon />
+                </IconButton>
+              </Stack>
+            </Grid>
+          </Grid>
+          <Typography 
+            variant="body2" 
+            sx={{ 
+              mt: 4,
+              color: 'rgba(255,255,255,0.6)',
+              fontWeight: '500'
+            }}
+          >
+            © {new Date().getFullYear()} PlaylistPlus. All rights reserved.
+          </Typography>
+        </Container>
       </Box>
     </Box>
   );
 };
 
-export default HomePage; 
+export default HomePage;

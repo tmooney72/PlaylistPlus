@@ -1,7 +1,10 @@
 from app import app
-from flask import session, redirect, url_for
+from flask import redirect, url_for, request
+from app.redisUser import redis_helper
 
 @app.route('/api/logout')
 def logout():
-    session.clear()
-    return redirect(url_for('home'))
+    data = request.get_json()
+    uid = data['uid']
+    redis_helper.delete_value(uid)
+    return {'success': True}

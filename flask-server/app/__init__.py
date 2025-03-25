@@ -17,7 +17,7 @@ print('this is running') #this works
 # Enable CORS with proper configuration
 CORS(app, 
      supports_credentials=True,
-     origins=["https://playlist-plus.vercel.app"],
+     origins=["https://playlist-plus.vercel.app", "http://localhost:5173"],
      )
 
 # Add a decorator to handle preflight requests
